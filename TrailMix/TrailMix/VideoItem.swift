@@ -15,21 +15,19 @@ class VideoItem: NSObject {
     var thumbnailURL: String?
     var duration: Int?
     var id: String?
-    init(title: String, fileURL: String, thumbnailURL: String, duration: Int) {
+    var year: String?
+    var cast: String?
+    var type: String?
+    
+    init(title: String, fileURL: String, thumbnailURL: String, duration: Int, id: String, year: String, cast: String, type: String) {
         super.init()
         self.title = title
         self.fileURL = fileURL
         self.thumbnailURL = thumbnailURL
         self.duration = duration
-        self.id = generateId()
-    }
-    func randomInt(min: Int, max:Int) -> Int {
-        return min + Int(arc4random_uniform(UInt32(max - min + 1)))
-    }
-    func generateId() -> String {
-        var k: Int = randomInt(1000000, max: 99999999)
-        var s = String(k)
-        println(s)
-        return s
+        self.id = id
+        self.year = year
+        self.cast = cast
+        self.type = type
     }
 }
