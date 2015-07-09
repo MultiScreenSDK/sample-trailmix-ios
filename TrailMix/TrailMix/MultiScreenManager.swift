@@ -73,6 +73,9 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     var services = [Service]()
     
 
+    var sliding: Bool = false
+    var slidingIgnoreEvents: Int = 0
+    
     /// returns the status if the channel/app is connected
     var isConnected: Bool {
         get {
@@ -314,8 +317,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     ///
     ///  :param: message: Text message received
     func onMessage(message: Message) {
-        println(message.event)
-        println(message.data)
+        //println(message.event)
+        //println(message.data)
         /*
         if message.event == "appState" {
             if let dict = message.data as? [String: AnyObject] {
@@ -351,8 +354,10 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         }
         if message.event == "videoStatus" {
             if let currentStatusDict = message.data as? [String:AnyObject] {
-                if currentStatusDict.count > 0 {
+                if currentStatusDict.count > 0  && sliding != true {
+                    if slidingIgnoreEvents-- <= 0 {
                     NSNotificationCenter.defaultCenter().postNotificationName(currentTrackStatusObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])
+                    }
                 }
             }
         } else if message.event == "trackEnd" {

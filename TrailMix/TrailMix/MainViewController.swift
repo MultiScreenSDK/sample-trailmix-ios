@@ -48,7 +48,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     
     
     
-    var sliding: Bool = false
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,8 +136,8 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidDisappear(animated)
         self.navigationController?.hidesBarsOnTap = false
         setupView()
     }
@@ -198,9 +198,13 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         
         if !multiScreenManager.isConnected {
             let url = (videos.objectAtIndex(indexPath.row) as! VideoItem).fileURL
-            let videoViewController = storyboard?.instantiateViewControllerWithIdentifier("VideoViewController") as! VideoViewController
+            let videoViewNavController = storyboard?.instantiateViewControllerWithIdentifier("VideoViewNavController") as! UINavigationController
+            videoViewNavController.navigationBar.barTintColor = color
+            videoViewNavController.navigationBar.translucent = false
+            let videoViewController = videoViewNavController.viewControllers[0] as! VideoViewController
             videoViewController.urlString = url
-            self.navigationController?.pushViewController(videoViewController, animated: true)
+            //self.navigationController?.pushViewController(videoViewController, animated: true)
+            self.presentViewController(videoViewNavController, animated: true, completion: nil)
         } else {
             let videoInfo = videos.objectAtIndex(indexPath.row) as! VideoItem
             videoDuration = videoInfo.duration!
@@ -209,27 +213,40 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             self.videoSlider.value = 0.0
             multiScreenManager.sendPlayVideo(videoInfo)
         }
-
+        
 //        var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")!
 //        let urlString = (videos.objectAtIndex(indexPath.row) as! VideoItem).fileURL
 //        var url2:NSURL = NSURL(string: urlString!)!
-//        let moviePlayerVC = MPMoviePlayerViewController(contentURL: url2)
+//        let moviePlayerVC = MyVideoPlayerController(contentURL: url2)
+//        moviePlayerVC.moviePlayer.controlStyle = MPMovieControlStyle.None
 //        self.navigationController?.presentMoviePlayerViewControllerAnimated(moviePlayerVC)
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
     func setupView() {
+        //return
         if multiScreenManager.isConnected {
             videoInfoView.hidden = false
             //videosTableView.frame = videoInfoView.frame
-            videosTableView.frame = videosTableViewRect!
+            videosTableView.frame = CGRect(x: videoInfoView.frame.origin.x, y: videoInfoView.frame.origin.x + videoInfoView.frame.size.height+1, width: self.view.frame.width, height: self.view.frame.height)
+            
+            //self.videosTableView.reloadData()
+            println(videosTableView.frame)
             self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
             self.videoSlider.minimumValue = 0.0
             self.videoSlider.maximumValue = Float(videoDuration)
             self.videoSlider.value = 0.0
         } else {
-            videoInfoView.hidden = true
-            videosTableView.frame = CGRect(origin: videoInfoView.frame.origin, size: self.view.frame.size)
+            
+            println("%%%%%%%%%%%%%")
+            println(videosTableView.frame.width)
+            println(videosTableView.frame.height)
+            
+            videosTableView.frame = CGRect(origin: videoInfoView.frame.origin, size: CGSize(width: self.view.frame.width, height: self.view.frame.height))
+            //self.videosTableView.reloadData()
+            videoInfoView.hidden = false
+            
+            println(videosTableView.frame)
             self.navigationController?.navigationBar.barTintColor = color
         }
     }
@@ -272,8 +289,12 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             videoDuration = currentStatusDict["duration"] as! Int
             self.videoSlider.minimumValue = 0.0
             self.videoSlider.maximumValue = Float(videoDuration)
-            if !sliding {
+            if !multiScreenManager.sliding {
                 videoSlider.setValue(fTime, animated: true)
+                println("setvalue \(fTime)")
+            }
+            else {
+                println("sliding, so no setvalue")
             }
             videoInfoLabel.text = currentStatusDict["title"] as? String
             
@@ -287,11 +308,27 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         }
     }
     func slidingStarted() {
-        sliding = true
+        multiScreenManager.sliding = true
+        multiScreenManager.slidingIgnoreEvents = 3
     }
     
     func slidingStopped() {
-        sliding = false
+        multiScreenManager.sliding = false
     }
+    
+    /*
+    override func supportedInterfaceOrientations() -> Int {
+        return  Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    }
+    
+    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
+        return UIInterfaceOrientation.Portrait
+    }
+    
+    override func shouldAutorotate() -> Bool {
+        return true
+    }
+    */
+    
 }
 

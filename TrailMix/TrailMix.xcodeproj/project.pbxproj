@@ -27,6 +27,7 @@
 		CD04E70C1B2A3CF400AF2EAC /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E70B1B2A3CF400AF2EAC /* VideoItem.swift */; };
 		CD04E7101B2A574100AF2EAC /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */; };
 		CD04E7121B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E7111B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift */; };
+		CD7121581B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7121571B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,7 @@
 		CD04E70B1B2A3CF400AF2EAC /* VideoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		CD04E7111B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+AFNetworking.swift"; sourceTree = "<group>"; };
+		CD7121571B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationControllerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +165,7 @@
 				CD04E7051B2A157B00AF2EAC /* TrailMix-Bridging-Header.h */,
 				CD04E70B1B2A3CF400AF2EAC /* VideoItem.swift */,
 				CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */,
+				CD7121571B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift */,
 			);
 			path = TrailMix;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				CD04E6FB1B2A136C00AF2EAC /* DevicesViewController.swift in Sources */,
 				CD04E6D81B28DF4D00AF2EAC /* UINavigationBar+Addition.swift in Sources */,
 				CD04E6DC1B28E15500AF2EAC /* UIImage+Helpers.swift in Sources */,
+				CD7121581B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift in Sources */,
 				CD04E6B81B28DBB900AF2EAC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
