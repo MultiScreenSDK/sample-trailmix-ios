@@ -68,7 +68,7 @@ class DeviceDisconnectViewController: UIViewController, UIGestureRecognizerDeleg
         if multiScreenManager.app != nil {
             connectedDeviceLabel?.text = "\(multiScreenManager.app.service.name)"
         }
-        connectedDeviceImageView.image = multiScreenManager.isSpeaker(multiScreenManager.app.service) ? UIImage(named: "icon_cast_connect")! : UIImage(named: "icon_cast_connect")!
+        connectedDeviceImageView.image = multiScreenManager.isSpeaker(multiScreenManager.app.service) ? UIImage(named: "ic_speaker_gray")! : UIImage(named: "ic_tv_gray")!
         
         //disconnectButton.tintColor = self.userColor?.stringToColor()
     }

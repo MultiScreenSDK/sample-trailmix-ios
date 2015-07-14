@@ -175,19 +175,9 @@ class VideoViewController: BaseVC {
     }
     
     override func shouldAutorotate() -> Bool {
-        return false
+        return true
     }
-    
-    /*
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
         
-        let value = UIInterfaceOrientation.LandscapeLeft.rawValue
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
-
-    }
-    */
-    
     func doneVideoPlayer() {
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }

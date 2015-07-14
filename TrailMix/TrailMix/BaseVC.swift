@@ -47,6 +47,8 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
     /// Alert view to displaye popup messages
     var alertView: UIAlertView!
     
+    var idVideoSelectedInMobile: String? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageConnectedCastButton = UIImage(named: "icon_cast_connect")

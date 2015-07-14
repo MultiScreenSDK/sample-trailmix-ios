@@ -59,9 +59,6 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     /// Name of the observer identifier for remove track
     let removeTrackObserverIdentifier: String = "removeTrack"
-
-    /// Name of the observer identifier for track start
-    let trackStartObserverIdentifier: String = "trackStart"
     
     /// Name of the observer identifier for assign color
     let assignColorObserverIdentifier: String = "assignColor"
@@ -90,6 +87,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         }
     }
     
+    var idVideoPlayigInTV: String? = String()
+    
     /// MultiScreenManager shared instance used as singleton
     class var sharedInstance: MultiScreenManager {
         struct Static {
@@ -106,6 +105,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     override init() {
         super.init()
         search.delegate = self
+        idVideoPlayigInTV = nil
     }
     
     /// Post a notification to the NSNotificationCenter
@@ -167,15 +167,15 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     ///
     /// :param: selected service
     /// :param: completionHandler The callback handler,  return true or false
-    func createApplication(service: Service, completionHandler: ((Bool!) -> Void)!){
+    func createApplication(service: Service, completionHandler: ((Bool!,error: NSError!) -> Void)!){
         app = service.createApplication(NSURL(string: appURL)!, channelURI: channelId, args: ["cmd line params": "cmd line values"])
         app.delegate = self
         app.connectionTimeout = 5
         app.connect(["name": UIDevice.currentDevice().name], completionHandler: { (client, error) -> Void in
             if (error == nil){
-                completionHandler(true)
+                completionHandler(true,error: error)
             } else {
-                completionHandler(false)
+                completionHandler(false,error: error)
             }
         })
     }
@@ -319,28 +319,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     func onMessage(message: Message) {
         //println(message.event)
         //println(message.data)
-        /*
         if message.event == "appState" {
-            if let dict = message.data as? [String: AnyObject] {
-                let queueMediaInfos =  (dict["playlist"]! as! [NSDictionary]).map {MediaItem(artist: $0["artist"] as! String, name: $0["album"] as! String, title: $0["title"] as! String, fileURL: $0["file"] as! String, albumArtURL: $0["albumArt"] as! String, thumbnailURL: $0["albumArtThumbnail"] as! String, id: $0["id"] as! String, duration: $0["duration"] as! Int, color: $0["color"] as! String)}
-                
-                NSNotificationCenter.defaultCenter().postNotificationName(refreshQueueObserverIdentifier, object: self, userInfo: ["userInfo" : queueMediaInfos])
-                println(message.data)
-                if let currentStatusDict = dict["currentStatus"] as? [String: AnyObject] {
-                    if currentStatusDict.count > 0 {
-                        println(currentStatusDict)
-                        NSNotificationCenter.defaultCenter().postNotificationName(currentTrackStatusObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])
-                    }
-                }
-            }
-        } else if message.event == "addTrack" {
-            if let mediaItem = message.data as? [String:AnyObject] {
-                let queueMediaItem = [MediaItem(artist: (mediaItem["artist"] as? String)!, name: (mediaItem["album"] as? String)!, title: (mediaItem["title"] as? String)!, fileURL: (mediaItem["file"] as? String)!, albumArtURL: (mediaItem["albumArt"] as? String)!, thumbnailURL: (mediaItem["albumArtThumbnail"] as? String)!, id: (mediaItem["id"] as? String)!, duration: (mediaItem["duration"] as? Int)!, color: (mediaItem["color"] as? String)!)]
-                
-                NSNotificationCenter.defaultCenter().postNotificationName(addTrackObserverIdentifier, object: self, userInfo: ["userInfo" : queueMediaItem])
-            }
-        } else */
-        if message.event == "appState" {
+            println(message.data)
             if let appStateDict = message.data as? [String:AnyObject] {
                 if appStateDict.count > 0 {
                     if let currentStatusDict = appStateDict["currentStatus"] as? [String:AnyObject] {
@@ -353,6 +333,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
             }
         }
         if message.event == "videoStatus" {
+            println(message.data)
             if let currentStatusDict = message.data as? [String:AnyObject] {
                 if currentStatusDict.count > 0  && sliding != true {
                     if slidingIgnoreEvents-- <= 0 {
@@ -360,20 +341,11 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
                     }
                 }
             }
-        } else if message.event == "trackEnd" {
+        } else if message.event == "videoEnd" {
+            idVideoPlayigInTV = nil
             sendAppStateRequest()
-        } else if message.event == "removeTrack" {
-            if let removeTrackId = message.data as? String {
-                NSNotificationCenter.defaultCenter().postNotificationName(removeTrackObserverIdentifier, object: self, userInfo: ["userInfo" : removeTrackId])
-            }
-        } else if message.event == "trackStart" {
-            if let trackStartId = message.data as? String {
-                NSNotificationCenter.defaultCenter().postNotificationName(trackStartObserverIdentifier, object: self, userInfo: ["userInfo" : trackStartId])
-            }
-        } else if message.event == "assignColor" {
-            if let assignColor = message.data as? String {
-                NSNotificationCenter.defaultCenter().postNotificationName(assignColorObserverIdentifier, object: self, userInfo: ["userInfo" : assignColor])
-            }
+        } else if message.event == "videoStart" {
+            idVideoPlayigInTV = message.data as? String
         }
     }
     
