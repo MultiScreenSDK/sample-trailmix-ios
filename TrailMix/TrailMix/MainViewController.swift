@@ -133,6 +133,9 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         // Add an observer
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateCurrentStatus:", name: multiScreenManager.currentTrackStatusObserverIdentifier, object: nil)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "videoEnd:", name: multiScreenManager.videoEndObserverIdentifier, object: nil)
+        
+        
         let thumbImage = UIImage(named: "sliderhandle")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0))
         
         UISlider.appearance().setThumbImage(thumbImage, forState: UIControlState.Normal)
@@ -347,6 +350,15 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             playPauseButton.hidden = false
         }
     }
+    
+    func videoEnd(notification: NSNotification) {
+        let userInfo: [String:AnyObject] = notification.userInfo as! [String:AnyObject]
+        if let currentStatusDict = (userInfo["userInfo"] as? [String:AnyObject]) {
+            playPauseButton.setBackgroundImage(UIImage(named: "ic_replay_dark"), forState: UIControlState.Normal)
+        }
+    }
+    
+    
     func slidingStarted() {
         multiScreenManager.sliding = true
         multiScreenManager.slidingIgnoreEvents = 3

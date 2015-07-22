@@ -57,6 +57,9 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     /// Name of the observer identifier for current track status
     let currentTrackStatusObserverIdentifier: String = "currentTrackStatus"
     
+    /// Name of the observer identifier for video end
+    let videoEndObserverIdentifier: String = "videoEnd"
+    
     /// Name of the observer identifier for remove track
     let removeTrackObserverIdentifier: String = "removeTrack"
     
@@ -348,7 +351,12 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
             }
         } else if message.event == "videoEnd" {
             idVideoPlayigInTV = nil
-            sendAppStateRequest()
+            //sendAppStateRequest()
+            if let currentStatusDict = message.data as? [String:AnyObject] {
+                if currentStatusDict.count > 0 {
+                    NSNotificationCenter.defaultCenter().postNotificationName(videoEndObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])
+                }
+            }
         } else if message.event == "videoStart" {
             idVideoPlayigInTV = message.data as? String
         }
