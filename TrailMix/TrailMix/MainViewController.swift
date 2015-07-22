@@ -61,6 +61,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        currentTime = 0.0
         
         let image = UIImage.imageWithColor(UIColor.blackColor())
         videoInfoViewRect = videoInfoView.frame
@@ -217,10 +218,12 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         if !multiScreenManager.isConnected {
             let url = videoInfo.fileURL
             let videoViewNavController = storyboard?.instantiateViewControllerWithIdentifier("VideoViewNavController") as! UINavigationController
-            videoViewNavController.navigationBar.barTintColor = color
-            videoViewNavController.navigationBar.translucent = false
+            videoViewNavController.navigationBar.barTintColor = UIColor.clearColor()
+            videoViewNavController.navigationBar.translucent = true
+            
             let videoViewController = videoViewNavController.viewControllers[0] as! VideoViewController
             videoViewController.urlString = url
+            videoViewController.videoTitle = videoInfo.title
             videoViewController.idVideoSelectedInMobile = videoInfo.id
             //self.navigationController?.pushViewController(videoViewController, animated: true)
             self.presentViewController(videoViewNavController, animated: true, completion: nil)
@@ -260,7 +263,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
             self.videoSlider.minimumValue = 0.0
             self.videoSlider.maximumValue = Float(videoDuration)
-            self.videoSlider.value = 0.0
+            self.videoSlider.value = Float(currentTime)
         } else {
             
             println("%%%%%%%%%%%%%")

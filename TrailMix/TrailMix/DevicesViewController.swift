@@ -165,9 +165,10 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         //title.text = "Connecting"
         /// If cell is selected then connect and start the application
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        self.closeView()
+        
         multiScreenManager.createApplication(services[indexPath.row] as! Service, completionHandler: { (success: Bool!,error: NSError?) -> Void in
             hud.hide(true)
+            self.closeView()
             if ((success) == false){
                 //self.displayAlertWithTitle("", message: "Connection could not be established")
                 //self.closeView()
@@ -229,9 +230,9 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         alertView.alertViewStyle = .Default
         alertView.show()
     }
-    
+    /*
     override func supportedInterfaceOrientations() -> Int {
-        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+        return Int(UIInterfaceOrientationMask.Landscape.rawValue | UIInterfaceOrientationMask.Portrait.rawValue)
     }
     
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
@@ -239,6 +240,8 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func shouldAutorotate() -> Bool {
-        return false
+        return true
     }
+    */
+    
 }

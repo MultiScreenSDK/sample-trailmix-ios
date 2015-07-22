@@ -13,7 +13,11 @@ class VideoViewController: BaseVC {
 
     var moviePlayer:MPMoviePlayerController!
     var urlString: String!
+    var videoTitle: String!
 
+    private var navBarHideSyncTimer: NSTimer? = nil
+    internal var hideTimeout: NSTimeInterval = 5
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,19 +36,23 @@ class VideoViewController: BaseVC {
         //moviePlayer.view.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.view.frame.height-70)
         moviePlayer.view.frame = self.view.frame
         moviePlayer.controlStyle = MPMovieControlStyle.Embedded
-        moviePlayer.shouldAutoplay = true
         moviePlayer.view.tag = 1
+        moviePlayer.scalingMode = MPMovieScalingMode.Fill
+        
         
         self.view.addSubview(moviePlayer.view)
         
         
-
+        //moviePlayer.fullscreen = true
         moviePlayer.shouldAutoplay = false
         
         moviePlayer.view.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight | UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleBottomMargin | UIViewAutoresizing.FlexibleRightMargin
 
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "videoPlayerLoadStateDidChange:", name: MPMoviePlayerLoadStateDidChangeNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "videoPlayerPlayStateDidChange:", name: MPMoviePlayerPlaybackStateDidChangeNotification, object: nil)
+        
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "videoPlayerDidFinishPlaying:", name: MPMoviePlayerPlaybackDidFinishNotification, object: moviePlayer)
         
@@ -66,10 +74,24 @@ class VideoViewController: BaseVC {
         moviePlayer.view.addGestureRecognizer(singleTapGestureRecognizer)
         //self.view.addGestureRecognizer(singleTapGestureRecognizer)
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "done", style: UIBarButtonItemStyle.Done, target: self, action: "doneVideoPlayer")
+        let barButtonTitle = "<  \(videoTitle)"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: barButtonTitle, style: UIBarButtonItemStyle.Done, target: self, action: "doneVideoPlayer")
+        let font = UIFont(name: "Arial", size: 14)
+        if let font2 = font {
+            self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName : font2, NSForegroundColorAttributeName : UIColor.whiteColor()], forState: UIControlState.Normal)
+        }
+        
+        let value = UIInterfaceOrientation.LandscapeLeft.rawValue
+        UIDevice.currentDevice().setValue(value, forKey: "orientation")
         
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let value = UIInterfaceOrientation.LandscapeLeft.rawValue
+        UIDevice.currentDevice().setValue(value, forKey: "orientation")
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -93,7 +115,18 @@ class VideoViewController: BaseVC {
     
     func videoPlayerLoadStateDidChange(notification: NSNotification) {
             //moviePlayer.fullscreen = true
+        println("videoPlayerLoadStateDidChange")
+        self.navBarHideSyncTimer?.invalidate()
+        self.navBarHideSyncTimer = nil
+        self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar2"), userInfo: nil, repeats: false)
     }
+    
+    func videoPlayerPlayStateDidChange(notification: NSNotification) {
+        println(notification)
+        moviePlayer.playbackState
+    }
+    
+    
     
     func videoPlayerDidFinishPlaying(notification: NSNotification) {
         //moviePlayer.view.removeFromSuperview()
@@ -105,6 +138,7 @@ class VideoViewController: BaseVC {
     }
     
     func videoPlayerDidExitFullScreen(notification: NSNotification) {
+        println("videoPlayerDidExitFullScreen")
         //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
         println(notification.userInfo)
         return
@@ -119,6 +153,7 @@ class VideoViewController: BaseVC {
     }
     
     func videoPlayerWillExitFullScreen(notification: NSNotification) {
+        println("videoPlayerWillExitFullScreen")
         println(notification.userInfo)
         //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
         let userInfo = notification.userInfo as! [String:AnyObject]
@@ -131,10 +166,6 @@ class VideoViewController: BaseVC {
                 }
             }
         }
-        
-        
-        
-        
     }
     
     
@@ -143,10 +174,20 @@ class VideoViewController: BaseVC {
     func showNavigationBar(){
         if ((self.navigationController?.navigationBar.hidden) == true){
             self.navigationController?.setNavigationBarHidden(false, animated: true)
+            //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+            self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar"), userInfo: nil, repeats: false)
+            println("unhide nav bar")
         } else {
             self.navigationController?.setNavigationBarHidden(true, animated: true)
-            
+            //moviePlayer.controlStyle = MPMovieControlStyle.None
+            navBarHideSyncTimer?.invalidate()
+            navBarHideSyncTimer = nil
+            println("hide nav bar")
         }
+    }
+    func showNavigationBar2() {
+        println("showNavigationBar")
+        showNavigationBar()
     }
     func serviceConnected() {
         doneVideoPlayer()
@@ -177,9 +218,20 @@ class VideoViewController: BaseVC {
     override func shouldAutorotate() -> Bool {
         return true
     }
-        
+    
     func doneVideoPlayer() {
+        
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        let value = UIInterfaceOrientation.Portrait.rawValue
+        UIDevice.currentDevice().setValue(value, forKey: "orientation")
+    }
+    
+    func test() {
+        
+        if navBarHideSyncTimer != nil {
+            navBarHideSyncTimer?.invalidate()
+            navBarHideSyncTimer = nil
+        }
     }
 }
 

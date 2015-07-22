@@ -88,6 +88,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     }
     
     var idVideoPlayigInTV: String? = String()
+    var videoState: String? = String()
+    var videoTime: Int? = Int()
     
     /// MultiScreenManager shared instance used as singleton
     class var sharedInstance: MultiScreenManager {
@@ -106,6 +108,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         super.init()
         search.delegate = self
         idVideoPlayigInTV = nil
+        videoState = nil
+        videoTime = 20
     }
     
     /// Post a notification to the NSNotificationCenter
@@ -249,6 +253,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
                 "title":videoItem.title!,
                 "duration":videoItem.duration!,
                 "file":videoItem.fileURL!,
+                "time":videoTime!
             ]
             app.publish(event: "play", message: playVideoDict, target: MessageTarget.All.rawValue)
         }
