@@ -55,7 +55,7 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
         imageDisconnectedCastButton = UIImage(named: "icon_cast_discovered")
         
         /// Configuring cast icon
-        castButton = UIButton(frame: CGRectMake(0, 0, 22, 17))
+        castButton = UIButton(frame: CGRectMake(0, 0, 22, 22))
         castButton.addTarget(self, action: Selector("showCastMenuView"), forControlEvents: UIControlEvents.TouchUpInside)
         castButton.setBackgroundImage(imageDisconnectedCastButton, forState: UIControlState.Normal)
         castBarButton = UIBarButtonItem(customView: castButton)

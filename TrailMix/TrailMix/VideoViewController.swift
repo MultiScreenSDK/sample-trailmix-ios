@@ -97,17 +97,6 @@ class VideoViewController: BaseVC {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -116,6 +105,7 @@ class VideoViewController: BaseVC {
     func videoPlayerLoadStateDidChange(notification: NSNotification) {
             //moviePlayer.fullscreen = true
         println("videoPlayerLoadStateDidChange")
+        println(notification.userInfo?.description)
         self.navBarHideSyncTimer?.invalidate()
         self.navBarHideSyncTimer = nil
         self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar2"), userInfo: nil, repeats: false)
@@ -123,39 +113,33 @@ class VideoViewController: BaseVC {
     
     func videoPlayerPlayStateDidChange(notification: NSNotification) {
         println(notification)
-        moviePlayer.playbackState
+        println(notification.userInfo?.description)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        self.navBarHideSyncTimer?.invalidate()
+        self.navBarHideSyncTimer = nil
+        self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar"), userInfo: nil, repeats: false)
+        if moviePlayer.playbackState == MPMoviePlaybackState.Stopped || moviePlayer.playbackState == MPMoviePlaybackState.Paused {
+            multiScreenManager.paused = true
+        } else {
+            multiScreenManager.paused = false
+        }
+        
+        multiScreenManager.videoTime = moviePlayer.currentPlaybackTime
     }
     
     
     
     func videoPlayerDidFinishPlaying(notification: NSNotification) {
-        //moviePlayer.view.removeFromSuperview()
-        //self.dismissViewControllerAnimated(true, completion: nil)
-        //self.navigationController?.popToRootViewControllerAnimated(true)
-        //self.dismissViewControllerAnimated(true, completion: nil)
-        println(notification.userInfo)
         doneVideoPlayer()
     }
     
     func videoPlayerDidExitFullScreen(notification: NSNotification) {
-        println("videoPlayerDidExitFullScreen")
-        //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
-        println(notification.userInfo)
-        return
-        let userInfo = notification.userInfo as! [String:AnyObject]
-        let reason: AnyObject? = userInfo[MPMoviePlayerPlaybackDidFinishReasonUserInfoKey]
-        let finishReason = MPMovieFinishReason(rawValue: reason!.integerValue)
-        
-        if MPMovieFinishReason.UserExited == finishReason {
-            doneVideoPlayer()
-        }
 
     }
     
     func videoPlayerWillExitFullScreen(notification: NSNotification) {
         println("videoPlayerWillExitFullScreen")
-        println(notification.userInfo)
-        //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+        println(notification.userInfo?.description)
         let userInfo = notification.userInfo as! [String:AnyObject]
         if let reason: AnyObject? = notification.userInfo![MPMoviePlayerPlaybackDidFinishReasonUserInfoKey] as? NSNumber  {
             if let theReason: AnyObject = reason {
@@ -167,7 +151,6 @@ class VideoViewController: BaseVC {
             }
         }
     }
-    
     
     
     /// Display the hidden navigation bar
@@ -197,7 +180,9 @@ class VideoViewController: BaseVC {
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool{
         //println(touch.view.tag)
         if (touch.view.tag == 1){
-            return true
+            println("touch.view.tag == 1")
+            showNavigationBar()
+            return false
         }
         return true
     }
@@ -220,7 +205,8 @@ class VideoViewController: BaseVC {
     }
     
     func doneVideoPlayer() {
-        
+        println("doneVideoPlayer")
+        multiScreenManager.videoTime = moviePlayer.currentPlaybackTime
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
         let value = UIInterfaceOrientation.Portrait.rawValue
         UIDevice.currentDevice().setValue(value, forKey: "orientation")

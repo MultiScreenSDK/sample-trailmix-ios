@@ -255,7 +255,7 @@
 				TargetAttributes = {
 					CD04E6B11B28DBB900AF2EAC = {
 						CreatedOnToolsVersion = 6.3;
-						DevelopmentTeam = ALLYES94EX;
+						DevelopmentTeam = Q63V73M8R9;
 					};
 					CD04E6C61B28DBB900AF2EAC = {
 						CreatedOnToolsVersion = 6.3;

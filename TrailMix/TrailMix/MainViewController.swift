@@ -31,13 +31,16 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var videoDurationLabel: UILabel!
     
+    @IBOutlet weak var deviceTypeImageView: UIImageView!
+    
+    
     @IBAction func resumePauseButtonPressed(sender: AnyObject) {
         if self.currentVideoState == "playing" {
             multiScreenManager.sendResumePause(false)
         } else if self.currentVideoState == "paused" {
             multiScreenManager.sendResumePause(true)
         } else {
-            multiScreenManager.sendResumePause(false)
+            multiScreenManager.sendResumePause(true)
         }
     }
     
@@ -128,7 +131,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
 
         // Add an observer to check if a tv is connected
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "serviceConnected", name: multiScreenManager.serviceConnectedObserverIdentifier, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "dismissQueueVC", name: multiScreenManager.dismissQueueVCObserverIdentifier, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "dismissVC", name: multiScreenManager.dismissVCObserverIdentifier, object: nil)
         
         // Add an observer
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateCurrentStatus:", name: multiScreenManager.currentTrackStatusObserverIdentifier, object: nil)
@@ -144,6 +147,8 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         videoSlider.addTarget(self, action: Selector("slidingStopped"), forControlEvents: UIControlEvents.TouchUpOutside)
         videoSlider.addTarget(self, action: Selector("slidingStarted"), forControlEvents: UIControlEvents.TouchDragInside)
         videoSlider.tintColor = color
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -231,7 +236,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             //self.navigationController?.pushViewController(videoViewController, animated: true)
             self.presentViewController(videoViewNavController, animated: true, completion: nil)
         } else {
-            
+            multiScreenManager.resetCurrentVideoData()
             sendVideoToTV(videoInfo)
             /*
             videoDuration = videoInfo.duration!
@@ -256,57 +261,87 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     
     func setupView() {
         //return
+        
+        setLeftBarButtonText()
+        
         if multiScreenManager.isConnected && multiScreenManager.idVideoPlayigInTV != nil{
             videoInfoView.hidden = false
-            //videosTableView.frame = videoInfoView.frame
+            
             videosTableView.frame = CGRect(x: videoInfoView.frame.origin.x, y: videoInfoView.frame.origin.x + videoInfoView.frame.size.height+1, width: self.view.frame.width, height: self.view.frame.height)
             
-            //self.videosTableView.reloadData()
-            println(videosTableView.frame)
+    
             self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
             self.videoSlider.minimumValue = 0.0
             self.videoSlider.maximumValue = Float(videoDuration)
             self.videoSlider.value = Float(currentTime)
         } else {
-            
-            println("%%%%%%%%%%%%%")
-            println(videosTableView.frame.width)
-            println(videosTableView.frame.height)
-            
             videosTableView.frame = CGRect(origin: videoInfoView.frame.origin, size: CGSize(width: self.view.frame.width, height: self.view.frame.height))
-            //self.videosTableView.reloadData()
+            
             videoInfoView.hidden = true
             
             println(videosTableView.frame)
             self.navigationController?.navigationBar.barTintColor = color
+            
         }
     }
     
     func serviceConnected() {
         setCastIcon()
         
-        if (self.navigationItem.leftBarButtonItem != nil) {
-            let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as! UILabel
-            label.text = multiScreenManager.app.service.name
-        }
+        setLeftBarButtonText()
         
         videoSlider.hidden = true
         playPauseButton.hidden = true
         videoInfoLabel.hidden = true
+        videoDurationLabel.hidden = true
+        videoPositionLabel.hidden = true
         multiScreenManager.sendAppStateRequest()
     }
     
     /// dismisses the Queue/PlayList View Controller
     ///
-    func dismissQueueVC() {
-        if (self.navigationItem.leftBarButtonItem != nil) {
-            let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as! UILabel
-            label.text = "TrailMix"
-        }
+    func dismissVC() {
+        setLeftBarButtonText()
         self.dismissViewControllerAnimated(true, completion: nil)
         setupView()
     }
     
+    func setLeftBarButtonText() {
+        if (self.navigationItem.leftBarButtonItem != nil) {
+            if let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as? UILabel {
+                if let deviceTypeImageView = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(101) as? UIImageView {
+                    if multiScreenManager.isConnected {
+                        label.text = multiScreenManager.app.service.displayName
+                        deviceTypeImageView.hidden = false
+                        
+                        label.frame = CGRectMake(deviceTypeImageView.frame.origin.x + deviceTypeImageView.frame.width + 5 , label.frame.origin.y, label.frame.width, label.frame.height)
+                    } else {
+                        label.text = "TrailMix"
+                        deviceTypeImageView.hidden = true
+                        
+                        label.frame = CGRectMake(deviceTypeImageView.frame.origin.x, label.frame.origin.y, label.frame.width, label.frame.height)
+                    }
+                }
+            }
+            
+        }
+        /*
+        if multiScreenManager.isConnected {
+            let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as! UILabel
+            let deviceTypeImageView = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(101) as! UIImageView
+            deviceTypeImageView.hidden = false
+            
+            label.frame = CGRectMake(deviceTypeImageView.frame.origin.x + deviceTypeImageView.frame.width + 5 , label.frame.origin.y, label.frame.width, label.frame.height)
+        } else {
+            let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as! UILabel
+            
+            let deviceTypeImageView = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(101) as! UIImageView
+            deviceTypeImageView.hidden = true
+            
+            label.frame = CGRectMake(deviceTypeImageView.frame.origin.x, label.frame.origin.y, label.frame.width, label.frame.height)
+        }
+*/
+    }
     func updateCurrentStatus(notification: NSNotification) {
         let userInfo: [String:AnyObject] = notification.userInfo as! [String:AnyObject]
         if let currentStatusDict = (userInfo["userInfo"] as? [String:AnyObject]) {
@@ -348,6 +383,8 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             videoInfoLabel.hidden = false
             videoSlider.hidden = false
             playPauseButton.hidden = false
+            videoDurationLabel.hidden = false
+            videoPositionLabel.hidden = false
         }
     }
     
@@ -377,7 +414,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         for elem in self.videos {
             let videoInfo = elem as! VideoItem
             if (videoInfo.id == id) {
-                return videoInfo.title!
+                return videoInfo.title
             }
         }
         return "unknown video"

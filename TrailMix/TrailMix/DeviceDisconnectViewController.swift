@@ -66,7 +66,7 @@ class DeviceDisconnectViewController: UIViewController, UIGestureRecognizerDeleg
 
     override func viewWillAppear(animated: Bool) {
         if multiScreenManager.app != nil {
-            connectedDeviceLabel?.text = "\(multiScreenManager.app.service.name)"
+            connectedDeviceLabel?.text = "\(multiScreenManager.app.service.displayName)"
         }
         connectedDeviceImageView.image = multiScreenManager.isSpeaker(multiScreenManager.app.service) ? UIImage(named: "ic_speaker_gray")! : UIImage(named: "ic_tv_gray")!
         

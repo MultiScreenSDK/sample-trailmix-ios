@@ -66,7 +66,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     /// Name of the observer identifier for assign color
     let assignColorObserverIdentifier: String = "assignColor"
     
-    let dismissQueueVCObserverIdentifier: String = "dismissQueueVC"
+    let dismissVCObserverIdentifier: String = "dismissVC"
     
     
     /// Array of services/TVs
@@ -92,7 +92,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     var idVideoPlayigInTV: String? = String()
     var videoState: String? = String()
-    var videoTime: Int? = Int()
+    var videoTime: NSTimeInterval? = NSTimeInterval()
+    var paused: Bool = Bool()
     
     /// MultiScreenManager shared instance used as singleton
     class var sharedInstance: MultiScreenManager {
@@ -111,8 +112,14 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         super.init()
         search.delegate = self
         idVideoPlayigInTV = nil
+        resetCurrentVideoData()
+    }
+    
+    func resetCurrentVideoData() {
+        
         videoState = nil
-        videoTime = 20
+        videoTime = 0
+        paused = false
     }
     
     /// Post a notification to the NSNotificationCenter
@@ -250,14 +257,19 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     func sendPlayVideo(videoItem: VideoItem) {
         if isConnected {
-            var playVideoDict: NSDictionary =
+            var playVideoDict: Dictionary<String,AnyObject> =
             [
-                "id":videoItem.id!,
-                "title":videoItem.title!,
-                "duration":videoItem.duration!,
-                "file":videoItem.fileURL!,
-                "time":videoTime!
+                "id":videoItem.id,
+                "title":videoItem.title,
+                "duration":videoItem.duration,
+                "file":videoItem.fileURL
             ]
+            if paused == true {
+                playVideoDict["state"] = "paused"
+            }
+            if videoTime > 0 {
+                playVideoDict["time"] = videoTime
+            }
             app.publish(event: "play", message: playVideoDict, target: MessageTarget.All.rawValue)
         }
     }
@@ -317,7 +329,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     ///  :param: error: An error info if any
     func onDisconnect(client: ChannelClient?, error: NSError?) {
         startSearching()
-        NSNotificationCenter.defaultCenter().postNotificationName(dismissQueueVCObserverIdentifier, object: self)
+        NSNotificationCenter.defaultCenter().postNotificationName(dismissVCObserverIdentifier, object: self)
         
     }
     ///  ChannelDelegate
@@ -328,7 +340,6 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         //println(message.event)
         //println(message.data)
         if message.event == "appState" {
-            println(message.data)
             if let appStateDict = message.data as? [String:AnyObject] {
                 if appStateDict.count > 0 {
                     if let currentStatusDict = appStateDict["currentStatus"] as? [String:AnyObject] {
@@ -344,8 +355,10 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
             println(message.data)
             if let currentStatusDict = message.data as? [String:AnyObject] {
                 if currentStatusDict.count > 0  && sliding != true {
-                    if slidingIgnoreEvents-- <= 0 {
+                    if slidingIgnoreEvents <= 0 {
                     NSNotificationCenter.defaultCenter().postNotificationName(currentTrackStatusObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])
+                    } else {
+                        slidingIgnoreEvents--
                     }
                 }
             }

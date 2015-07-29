@@ -10,17 +10,16 @@ import Foundation
 import UIKit
 
 class VideoItem: NSObject {
-    var title: String?
-    var fileURL: String?
-    var thumbnailURL: String?
-    var duration: Int?
-    var id: String?
-    var year: String?
-    var cast: String?
-    var type: String?
+    var title: String
+    var fileURL: String
+    var thumbnailURL: String
+    var duration: Int
+    var id: String
+    var year: String
+    var cast: String
+    var type: String
     
     init(title: String, fileURL: String, thumbnailURL: String, duration: Int, id: String, year: String, cast: String, type: String) {
-        super.init()
         self.title = title
         self.fileURL = fileURL
         self.thumbnailURL = thumbnailURL

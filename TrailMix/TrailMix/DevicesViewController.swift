@@ -123,8 +123,8 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.textLabel?.textAlignment = .Left
         cell.textLabel?.frame.origin.x = -20
         
-        if let name = services[indexPath.row].name {
-            cell.textLabel?.text = services[indexPath.row].name
+        if let displayName = services[indexPath.row].displayName {
+            cell.textLabel?.text = services[indexPath.row].displayName
             //cell.textLabel?.attributedText = NSMutableAttributedString(string: "\(services[indexPath.row].name)", attributes: [NSFontAttributeName: UIFont(name: "Roboto-Light", size: 14.0)!])
         }
         
@@ -156,7 +156,7 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         hud.yOffset = someFloat
         self.view.addSubview(hud)
         
-        let toastMsg =  String("connecting to ") + (services[indexPath.row] as! Service).name
+        let toastMsg =  String("connecting to ") + (services[indexPath.row] as! Service).displayName
         
         hud.labelText = toastMsg
         hud.show(true)
