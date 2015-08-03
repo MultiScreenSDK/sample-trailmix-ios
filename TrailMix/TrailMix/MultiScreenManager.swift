@@ -74,7 +74,6 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
 
     var sliding: Bool = false
-    var slidingIgnoreEvents: Int = 0
     
     /// returns the status if the channel/app is connected
     var isConnected: Bool {
@@ -355,11 +354,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
             println(message.data)
             if let currentStatusDict = message.data as? [String:AnyObject] {
                 if currentStatusDict.count > 0  && sliding != true {
-                    if slidingIgnoreEvents <= 0 {
                     NSNotificationCenter.defaultCenter().postNotificationName(currentTrackStatusObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])
-                    } else {
-                        slidingIgnoreEvents--
-                    }
                 }
             }
         } else if message.event == "videoEnd" {

@@ -46,7 +46,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     
     
     @IBAction func videoSliderValueChanged(sender: AnyObject) {
-        multiScreenManager.sendSeek(Int(videoSlider.value))
+        
     }
     var videoDuration: Int = 0
     
@@ -398,7 +398,6 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     
     func slidingStarted() {
         multiScreenManager.sliding = true
-        multiScreenManager.slidingIgnoreEvents = 3
     }
     
     func slidingStopped() {
@@ -408,6 +407,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         let (hh,mm,ss) = secondsToHoursMinutesSeconds(Int(fTime))
         
         self.videoPositionLabel.text = String(format: "%02d:%02d:%02d", hh,mm,ss)
+        multiScreenManager.sendSeek(Int(videoSlider.value))
     }
     
     func titleFromId(id: String) -> String {
