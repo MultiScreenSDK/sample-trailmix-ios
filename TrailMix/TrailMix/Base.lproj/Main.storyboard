@@ -87,11 +87,16 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" tag="1000" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="img_currentplay" id="T5b-0u-SG4">
+                                                    <rect key="frame" x="123" y="58" width="60" height="60"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
+                                            <outlet property="nowPlayingImageView" destination="T5b-0u-SG4" id="Z7H-sF-rGv"/>
                                             <outlet property="videoInfoLabel" destination="tcI-Na-v0B" id="xxq-GX-lCs"/>
                                             <outlet property="videoInfoLabelImageView" destination="f8b-b5-3DL" id="4Qb-8w-yoX"/>
                                             <outlet property="videoThumbnailImageView" destination="OsK-jr-wKz" id="rMl-mU-FKc"/>
@@ -297,6 +302,7 @@
         <image name="ic_pause_dark" width="72" height="72"/>
         <image name="ic_tv" width="20" height="20"/>
         <image name="ic_tv_gray" width="20" height="20"/>
+        <image name="img_currentplay" width="72" height="72"/>
         <image name="shadow_8px" width="750" height="200"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

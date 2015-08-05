@@ -28,6 +28,7 @@ class VideoTableViewCell: UITableViewCell {
 
     @IBOutlet weak var videoThumbnailImageView: UIImageView!
     
+    @IBOutlet weak var nowPlayingImageView: UIImageView!
     @IBOutlet weak var videoInfoLabelImageView: UIImageView!
     @IBOutlet weak var videoInfoLabel: UILabel!
     override func awakeFromNib() {

@@ -32,6 +32,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     var color: UIColor = UIColor()
     
     var currentTime = NSNumber()
+
     
     @IBOutlet weak var videosTableView: UITableView!
     
@@ -67,7 +68,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     var videoDuration: Int = 0
     
     var currentVideoState = String("unknown")
-    var currentVideoId: String = String()
+
     
     var videoInfoViewRect: CGRect?
     var videosTableViewRect: CGRect?
@@ -201,10 +202,10 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier("VideoTableViewCellID", forIndexPath: indexPath) as! VideoTableViewCell
         
         // Configure the cell...
+        let videoIem = (videos.objectAtIndex(indexPath.row) as! VideoItem)
+        var imageURL: String? = videoIem.thumbnailURL
         
-        var imageURL: String? = (videos.objectAtIndex(indexPath.row) as! VideoItem).thumbnailURL
-        
-        cell.videoInfoLabel.text = (videos.objectAtIndex(indexPath.row) as! VideoItem).title
+        cell.videoInfoLabel.text = videoIem.title
         cell.videoInfoLabel.sizeToFit()
         
         
@@ -222,6 +223,17 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             let url = NSURL(string: imageURLEncoded)
             cell.videoThumbnailImageView.setImageWithUrl(url!, placeHolderImage: UIImage(named: "album_placeholder"))
 
+        }
+        
+        
+        
+        if multiScreenManager.idVideoPlayigInTV != nil && videoIem.id == multiScreenManager.idVideoPlayigInTV!  {
+            cell.contentView.alpha = 0.3
+            cell.nowPlayingImageView.hidden = false
+        }
+        else {
+            cell.contentView.alpha = 1.0
+            cell.nowPlayingImageView.hidden = true
         }
         return cell
     }
@@ -242,7 +254,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             videoViewController.idVideoSelectedInMobile = videoInfo.id
             //self.navigationController?.pushViewController(videoViewController, animated: true)
             self.presentViewController(videoViewNavController, animated: true, completion: nil)
-        } else {
+        } else if videoInfo.id != multiScreenManager.idVideoPlayigInTV {
             multiScreenManager.resetCurrentVideoData()
             sendVideoToTV(videoInfo)
             idVideoSelectedInMobile = nil
@@ -258,7 +270,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         if multiScreenManager.isConnected && multiScreenManager.idVideoPlayigInTV != nil{
             videoInfoView.hidden = false
             
-            videosTableView.frame = CGRect(x: videoInfoView.frame.origin.x, y: videoInfoView.frame.origin.x + videoInfoView.frame.size.height+1, width: self.view.frame.width, height: self.view.frame.height)
+            videosTableView.frame = CGRect(x: videoInfoView.frame.origin.x, y: videoInfoView.frame.origin.x + videoInfoView.frame.size.height+1, width: self.view.frame.width, height: self.view.frame.height - videoInfoView.frame.size.height)
             
     
             self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
@@ -293,6 +305,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         setLeftBarButtonText()
         self.dismissViewControllerAnimated(true, completion: nil)
         setupView()
+        videosTableView.reloadData()
     }
     
     func setLeftBarButtonText() {
@@ -321,9 +334,13 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             
             setupView()
             
-            self.currentVideoId = currentStatusDict["id"] as! String
+            let currentVideoId = currentStatusDict["id"] as! String
             self.currentVideoState = currentStatusDict["state"] as! String
             
+            if multiScreenManager.idVideoPlayigInTV != currentVideoId {
+                multiScreenManager.idVideoPlayigInTV = currentStatusDict["id"] as? String
+                videosTableView.reloadData()
+            }
             multiScreenManager.idVideoPlayigInTV = currentStatusDict["id"] as? String
             
             currentTime = currentStatusDict["time"] as! NSNumber
@@ -335,17 +352,15 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
                 videoSlider.setValue(fTime, animated: true)
             }
             
-            let (h,m,s) = secondsToHoursMinutesSeconds(videoDuration)
+            let (hoursVideoDuration,minuteVideoDuration,secsVideoDuration) = secondsToHoursMinutesSeconds(videoDuration)
             
-            self.videoDurationLabel.text = String(format: "%02d:%02d:%02d", h,m,s)
+            self.videoDurationLabel.text = String(format: "%02d:%02d:%02d", hoursVideoDuration,minuteVideoDuration,secsVideoDuration)
             
-            let (hh,mm,ss) = secondsToHoursMinutesSeconds(Int(fTime))
+            let (hoursVideoPosition,minutesVideoPosition,secsVideoPosition) = secondsToHoursMinutesSeconds(Int(fTime))
             
-            self.videoPositionLabel.text = String(format: "%02d:%02d:%02d", hh,mm,ss)
+            self.videoPositionLabel.text = String(format: "%02d:%02d:%02d", hoursVideoPosition,minutesVideoPosition,secsVideoPosition)
             
             videoInfoLabel.text = currentStatusDict["title"] as? String
-            
-            //videoInfoLabel.sizeToFit()
             
             playPauseButton.setBackgroundImage(self.currentVideoState == "playing" ? UIImage(named: "ic_pause_dark"): UIImage(named: "ic_play_dark"), forState: UIControlState.Normal)
             
@@ -411,11 +426,13 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
                 let alertView = UIAlertController(title: titleMsg, message: alertMsg, preferredStyle: .Alert)
                 alertView.addAction(UIAlertAction(title: "Overwrite", style: .Default, handler: { (alertAction) -> Void in
                     self.multiScreenManager.sendPlayVideo(videoInfo)
+                    self.videosTableView.reloadData()
                 }))
                 alertView.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
                 presentViewController(alertView, animated: true, completion: nil)
             } else {
                 multiScreenManager.sendPlayVideo(videoInfo)
+                self.videosTableView.reloadData()
             }
         }
         

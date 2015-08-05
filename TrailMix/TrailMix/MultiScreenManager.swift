@@ -240,6 +240,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
                 playVideoDict["time"] = videoTime
             }
             app.publish(event: "play", message: playVideoDict, target: MessageTarget.All.rawValue)
+            idVideoPlayigInTV = videoItem.id
         }
     }
     
@@ -281,6 +282,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     ///  :param: error: An error info if any
     func onDisconnect(client: ChannelClient?, error: NSError?) {
         startSearching()
+        idVideoPlayigInTV = nil
         NSNotificationCenter.defaultCenter().postNotificationName(dismissVCObserverIdentifier, object: self)
         
     }
