@@ -90,7 +90,6 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        println(services.count)
         return services.count;
     }
     
@@ -129,7 +128,6 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         var image : UIImage = UIImage(named: "icon_cast_discovered")!
-        println("The loaded image: \(image)")
         cell.imageView!.image = multiScreenManager.isSpeaker(services[indexPath.row] as! Service) ? UIImage(named: "ic_speaker")! : UIImage(named: "ic_tv")!
         
         cell.backgroundColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
@@ -170,8 +168,6 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
             hud.hide(true)
             self.closeView()
             if ((success) == false){
-                //self.displayAlertWithTitle("", message: "Connection could not be established")
-                //self.closeView()
                 var errorMsg: String? = String()
                 if error != nil {
                     errorMsg = error!.localizedDescription
@@ -217,31 +213,9 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     /// UIGestureRecognizerDelegate used to disable the tap event if the tapped View is not the main View
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool{
-        println(touch.view.tag)
         if (touch.view.tag == 1){
             return true
         }
         return false
     }
-    
-    /// Displays an Alert dialog
-    func displayAlertWithTitle( title: NSString, message: NSString) {
-        var  alertView:UIAlertView = UIAlertView(title: title as String, message: message as String, delegate: self, cancelButtonTitle: "OK")
-        alertView.alertViewStyle = .Default
-        alertView.show()
-    }
-    /*
-    override func supportedInterfaceOrientations() -> Int {
-        return Int(UIInterfaceOrientationMask.Landscape.rawValue | UIInterfaceOrientationMask.Portrait.rawValue)
-    }
-    
-    override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
-        return UIInterfaceOrientation.Portrait
-    }
-    
-    override func shouldAutorotate() -> Bool {
-        return true
-    }
-    */
-    
 }

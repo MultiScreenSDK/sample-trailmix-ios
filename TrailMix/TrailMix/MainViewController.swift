@@ -1,10 +1,26 @@
-//
-//  ViewController.swift
-//  TrailMix
-//
-//  Created by Prasath Thurgam on 6/10/15.
-//  Copyright (c) 2015 samsung. All rights reserved.
-//
+/*
+
+Copyright (c) 2014 Samsung Electronics
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
 
 import UIKit
 import MediaPlayer
@@ -211,15 +227,6 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
     }
     
     
-    // returns nil if cell is not visible or index path is out of range
-//    func cellForRowAtIndexPath(indexPath: NSIndexPath) -> UITableViewCell?  {
-//        if let updateCell = tableView.cellForRowAtIndexPath(indexPath) as? MediaTableViewCell {
-//            return updateCell
-//        }
-//        return nil
-//    }
-    
-    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let videoInfo = videos.objectAtIndex(indexPath.row) as! VideoItem
         idVideoSelectedInMobile = videoInfo.id
@@ -238,29 +245,13 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         } else {
             multiScreenManager.resetCurrentVideoData()
             sendVideoToTV(videoInfo)
-            /*
-            videoDuration = videoInfo.duration!
-            self.videoSlider.minimumValue = 0.0
-            self.videoSlider.maximumValue = Float(videoDuration)
-            self.videoSlider.value = 0.0
-            multiScreenManager.sendPlayVideo(videoInfo)
-            */
             idVideoSelectedInMobile = nil
             
         }
-        
-//        var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")!
-//        let urlString = (videos.objectAtIndex(indexPath.row) as! VideoItem).fileURL
-//        var url2:NSURL = NSURL(string: urlString!)!
-//        let moviePlayerVC = MyVideoPlayerController(contentURL: url2)
-//        moviePlayerVC.moviePlayer.controlStyle = MPMovieControlStyle.None
-//        self.navigationController?.presentMoviePlayerViewControllerAnimated(moviePlayerVC)
-        
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
     func setupView() {
-        //return
         
         setLeftBarButtonText()
         
@@ -278,8 +269,6 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             videosTableView.frame = CGRect(origin: videoInfoView.frame.origin, size: CGSize(width: self.view.frame.width, height: self.view.frame.height))
             
             videoInfoView.hidden = true
-            
-            println(videosTableView.frame)
             self.navigationController?.navigationBar.barTintColor = color
             
         }
@@ -325,22 +314,6 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             }
             
         }
-        /*
-        if multiScreenManager.isConnected {
-            let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as! UILabel
-            let deviceTypeImageView = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(101) as! UIImageView
-            deviceTypeImageView.hidden = false
-            
-            label.frame = CGRectMake(deviceTypeImageView.frame.origin.x + deviceTypeImageView.frame.width + 5 , label.frame.origin.y, label.frame.width, label.frame.height)
-        } else {
-            let label = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(100) as! UILabel
-            
-            let deviceTypeImageView = self.navigationItem.leftBarButtonItem?.customView?.viewWithTag(101) as! UIImageView
-            deviceTypeImageView.hidden = true
-            
-            label.frame = CGRectMake(deviceTypeImageView.frame.origin.x, label.frame.origin.y, label.frame.width, label.frame.height)
-        }
-*/
     }
     func updateCurrentStatus(notification: NSNotification) {
         let userInfo: [String:AnyObject] = notification.userInfo as! [String:AnyObject]
@@ -360,10 +333,6 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
             self.videoSlider.maximumValue = Float(videoDuration)
             if !multiScreenManager.sliding {
                 videoSlider.setValue(fTime, animated: true)
-                println("setvalue \(fTime)")
-            }
-            else {
-                println("sliding, so no setvalue")
             }
             
             let (h,m,s) = secondsToHoursMinutesSeconds(videoDuration)

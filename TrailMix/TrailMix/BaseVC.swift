@@ -101,15 +101,6 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
     /// User can connect to a service
     /// User can disconnect from a connected service
     func showCastMenuView(){
-        /*
-        /// UIView that contains a list of available services
-        var viewArray = NSBundle.mainBundle().loadNibNamed("ServicesView", owner: self, options: nil)
-        servicesView = viewArray[0] as! ServicesView
-        servicesView.frame = UIScreen.mainScreen().bounds
-        
-        /// Adding UIVIew to superView
-        addUIViewToWindowSuperView(servicesView)
-*/
         if multiScreenManager.isConnected {
             showDisconnectPopover()
         } else {
@@ -138,15 +129,6 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
         popoverVC.view.tag = 1
         // Present it before configuring it
         presentViewController(popoverVC, animated: true, completion: nil)
-        
-        // Now the popoverPresentationController has been created
-//        if let popoverController = popoverVC.popoverPresentationController {
-//            popoverController.sourceView = self.view
-//            popoverController.sourceRect = self.view.bounds
-//            popoverController.permittedArrowDirections = .Any
-//            popoverController.delegate = self
-//        }
-        
     }
     
     func showDisconnectPopover() {
@@ -170,13 +152,4 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
         presentViewController(popoverVC, animated: true, completion: nil)
         
     }
-    
-    /// Displays an Alert dialog
-    func displayAlertWithTitle( title: NSString, message: NSString) {
-        alertView = UIAlertView(title: title as String, message: message as String, delegate: self, cancelButtonTitle: "OK")
-        alertView.alertViewStyle = .Default
-        alertView.show()
-    }
-    
-    
 }

@@ -214,36 +214,6 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         }
     }
     
-    /// Send UserColorRequest event to the connected Service
-    ///
-    func sendUserColorRequest() {
-        if (isConnected){
-            app.publish(event: "assignColorRequest", message: nil)
-        }
-    }
-    
-    /*
-    /// Send AddTrack event to the the connected Service
-    ///
-    /// :param: MediaItem to be sent
-    func sendAddTrack(var mediaItem: MediaItem){
-        if (isConnected) {
-            var addTrackDict: NSDictionary =
-            [
-                "id":mediaItem.id!,
-                "artist":mediaItem.artist!,
-                "album":mediaItem.name!,
-                "title":mediaItem.title!,
-                "duration":mediaItem.duration!,
-                "file":mediaItem.fileURL!,
-                "albumArt":mediaItem.albumArtURL!,
-                "albumArtThumbnail":mediaItem.thumbnailURL!,
-                "color":mediaItem.color!
-            ]
-            app.publish(event: "addTrack", message: addTrackDict, target: MessageTarget.All.rawValue)
-        }
-    }
-    */
     
     /// Send PlayPause event to the the connected Service
     ///
@@ -273,30 +243,13 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
         }
     }
     
-    /// Send NextTrack event to the the connected Service
-    ///
-    func sendNextTrack() {
-        if isConnected {
-            app.publish(event: "next", message: nil, target: MessageTarget.Broadcast.rawValue)
-        }
-    }
-    
+
     
     func sendSeek(time: Int) {
         if isConnected {
             app.publish(event: "seek", message: time, target: MessageTarget.Broadcast.rawValue)
         }
     }
-    
-    /*
-    /// Send RemoveTrack event to the the connected Service
-    ///
-    func sendRemoveTrack(var mediaItem: MediaItem) {
-        if isConnected {
-            app.publish(event: "removeTrack", message: mediaItem.id, target: MessageTarget.Broadcast.rawValue)
-        }
-    }
-    */
     
     
     //MARK: - ChannelDelegate -
@@ -336,14 +289,11 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     ///
     ///  :param: message: Text message received
     func onMessage(message: Message) {
-        //println(message.event)
-        //println(message.data)
         if message.event == "appState" {
             if let appStateDict = message.data as? [String:AnyObject] {
                 if appStateDict.count > 0 {
                     if let currentStatusDict = appStateDict["currentStatus"] as? [String:AnyObject] {
                         if currentStatusDict.count > 0 {
-                            println(currentStatusDict)
                             NSNotificationCenter.defaultCenter().postNotificationName(currentTrackStatusObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])
                         }
                     }
@@ -351,7 +301,6 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
             }
         }
         if message.event == "videoStatus" {
-            println(message.data)
             if let currentStatusDict = message.data as? [String:AnyObject] {
                 if currentStatusDict.count > 0  && sliding != true {
                     NSNotificationCenter.defaultCenter().postNotificationName(currentTrackStatusObserverIdentifier, object: self, userInfo: ["userInfo" : currentStatusDict])

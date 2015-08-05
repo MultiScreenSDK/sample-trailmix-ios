@@ -82,7 +82,6 @@ class DeviceDisconnectViewController: UIViewController, UIGestureRecognizerDeleg
 
     /// UIGestureRecognizerDelegate used to disable the tap event if the tapped View is not the main View
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool{
-        println(touch.view.tag)
         if (touch.view.tag == 1){
             return true
         }

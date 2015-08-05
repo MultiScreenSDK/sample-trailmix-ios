@@ -104,16 +104,12 @@ class VideoViewController: BaseVC {
     
     func videoPlayerLoadStateDidChange(notification: NSNotification) {
             //moviePlayer.fullscreen = true
-        println("videoPlayerLoadStateDidChange")
-        println(notification.userInfo?.description)
         self.navBarHideSyncTimer?.invalidate()
         self.navBarHideSyncTimer = nil
         self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar2"), userInfo: nil, repeats: false)
     }
     
     func videoPlayerPlayStateDidChange(notification: NSNotification) {
-        println(notification)
-        println(notification.userInfo?.description)
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.navBarHideSyncTimer?.invalidate()
         self.navBarHideSyncTimer = nil
@@ -138,8 +134,6 @@ class VideoViewController: BaseVC {
     }
     
     func videoPlayerWillExitFullScreen(notification: NSNotification) {
-        println("videoPlayerWillExitFullScreen")
-        println(notification.userInfo?.description)
         let userInfo = notification.userInfo as! [String:AnyObject]
         if let reason: AnyObject? = notification.userInfo![MPMoviePlayerPlaybackDidFinishReasonUserInfoKey] as? NSNumber  {
             if let theReason: AnyObject = reason {
@@ -159,17 +153,14 @@ class VideoViewController: BaseVC {
             self.navigationController?.setNavigationBarHidden(false, animated: true)
             //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
             self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar"), userInfo: nil, repeats: false)
-            println("unhide nav bar")
         } else {
             self.navigationController?.setNavigationBarHidden(true, animated: true)
             //moviePlayer.controlStyle = MPMovieControlStyle.None
             navBarHideSyncTimer?.invalidate()
             navBarHideSyncTimer = nil
-            println("hide nav bar")
         }
     }
     func showNavigationBar2() {
-        println("showNavigationBar")
         showNavigationBar()
     }
     func serviceConnected() {
@@ -178,9 +169,7 @@ class VideoViewController: BaseVC {
     
     /// UIGestureRecognizerDelegate used to disable the tap event if the tapped View is not the main View
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool{
-        //println(touch.view.tag)
         if (touch.view.tag == 1){
-            println("touch.view.tag == 1")
             showNavigationBar()
             return false
         }
@@ -205,7 +194,6 @@ class VideoViewController: BaseVC {
     }
     
     func doneVideoPlayer() {
-        println("doneVideoPlayer")
         multiScreenManager.videoTime = moviePlayer.currentPlaybackTime
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
         let value = UIInterfaceOrientation.Portrait.rawValue
