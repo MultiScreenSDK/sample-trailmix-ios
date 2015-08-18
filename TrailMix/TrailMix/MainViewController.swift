@@ -106,7 +106,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         //[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        let url = NSURL(string: "http://dev-multiscreen.samsung.com/examples/trailmix/trailers/library.json")
+        let url = NSURL(string: "http://multiscreen.samsung.com/examples/trailmix/trailers/library.json")
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) { [unowned self]  () -> Void in
             

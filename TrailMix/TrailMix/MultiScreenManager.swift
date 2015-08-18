@@ -34,7 +34,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     var queueMedias = NSMutableOrderedSet()
     
     /// Application url
-    var appURL: String =  "http://s3-us-west-1.amazonaws.com/dev-multiscreen-examples/examples/trailmix/tv/index.html"
+    var appURL: String =  "http://multiscreen.samsung.com/examples/trailmix/tv/index.html"
     /// Application Channel
     //var channelId: String = "com.samsung.multiscreen.photos"
     var channelId: String = "com.samsung.trailmix"
