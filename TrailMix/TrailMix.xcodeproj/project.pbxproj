@@ -13,7 +13,6 @@
 		CD04E6BF1B28DBB900AF2EAC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD04E6BE1B28DBB900AF2EAC /* Images.xcassets */; };
 		CD04E6C21B28DBB900AF2EAC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD04E6C01B28DBB900AF2EAC /* LaunchScreen.xib */; };
 		CD04E6CE1B28DBB900AF2EAC /* TrailMixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6CD1B28DBB900AF2EAC /* TrailMixTests.swift */; };
-		CD04E6D81B28DF4D00AF2EAC /* UINavigationBar+Addition.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6D71B28DF4D00AF2EAC /* UINavigationBar+Addition.swift */; };
 		CD04E6DB1B28E15500AF2EAC /* String+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6D91B28E15500AF2EAC /* String+Helpers.swift */; };
 		CD04E6DC1B28E15500AF2EAC /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6DA1B28E15500AF2EAC /* UIImage+Helpers.swift */; };
 		CD04E6E21B28EA1B00AF2EAC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6E11B28EA1B00AF2EAC /* VideoViewController.swift */; };
@@ -27,7 +26,7 @@
 		CD04E70C1B2A3CF400AF2EAC /* VideoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E70B1B2A3CF400AF2EAC /* VideoItem.swift */; };
 		CD04E7101B2A574100AF2EAC /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */; };
 		CD04E7121B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E7111B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift */; };
-		CD7121581B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7121571B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift */; };
+		CD7121581B4C75B0004AF0F0 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7121571B4C75B0004AF0F0 /* CustomNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,7 +85,6 @@
 		CD04E6C71B28DBB900AF2EAC /* TrailMixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrailMixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD04E6CC1B28DBB900AF2EAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD04E6CD1B28DBB900AF2EAC /* TrailMixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailMixTests.swift; sourceTree = "<group>"; };
-		CD04E6D71B28DF4D00AF2EAC /* UINavigationBar+Addition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Addition.swift"; sourceTree = "<group>"; };
 		CD04E6D91B28E15500AF2EAC /* String+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Helpers.swift"; sourceTree = "<group>"; };
 		CD04E6DA1B28E15500AF2EAC /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
 		CD04E6E11B28EA1B00AF2EAC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -101,7 +99,7 @@
 		CD04E70B1B2A3CF400AF2EAC /* VideoItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoItem.swift; sourceTree = "<group>"; };
 		CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		CD04E7111B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+AFNetworking.swift"; sourceTree = "<group>"; };
-		CD7121571B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationControllerViewController.swift; sourceTree = "<group>"; };
+		CD7121571B4C75B0004AF0F0 /* CustomNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,12 +158,11 @@
 				CD04E6BE1B28DBB900AF2EAC /* Images.xcassets */,
 				CD04E6C01B28DBB900AF2EAC /* LaunchScreen.xib */,
 				CD04E6B51B28DBB900AF2EAC /* Supporting Files */,
-				CD04E6D71B28DF4D00AF2EAC /* UINavigationBar+Addition.swift */,
 				CD04E6E11B28EA1B00AF2EAC /* VideoViewController.swift */,
 				CD04E7051B2A157B00AF2EAC /* TrailMix-Bridging-Header.h */,
 				CD04E70B1B2A3CF400AF2EAC /* VideoItem.swift */,
 				CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */,
-				CD7121571B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift */,
+				CD7121571B4C75B0004AF0F0 /* CustomNavigationController.swift */,
 			);
 			path = TrailMix;
 			sourceTree = "<group>";
@@ -341,9 +338,8 @@
 				CD04E6F71B2A0CE000AF2EAC /* BaseVC.swift in Sources */,
 				CD04E70A1B2A159B00AF2EAC /* MBProgressHUD.m in Sources */,
 				CD04E6FB1B2A136C00AF2EAC /* DevicesViewController.swift in Sources */,
-				CD04E6D81B28DF4D00AF2EAC /* UINavigationBar+Addition.swift in Sources */,
 				CD04E6DC1B28E15500AF2EAC /* UIImage+Helpers.swift in Sources */,
-				CD7121581B4C75B0004AF0F0 /* CustomNavigationControllerViewController.swift in Sources */,
+				CD7121581B4C75B0004AF0F0 /* CustomNavigationController.swift in Sources */,
 				CD04E6B81B28DBB900AF2EAC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

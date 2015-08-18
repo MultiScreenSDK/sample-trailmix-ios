@@ -23,17 +23,10 @@ class VideoViewController: BaseVC {
 
         // Do any additional setup after loading the view.
         
-        //self.navigationController?.hidesBarsOnTap = true
-        
-        //return
-        //var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")!
-        //var url:NSURL = NSURL(string: "http://www.ebookfrenzy.com/ios_book/movie/movie.mov")!
-        
         var url:NSURL = NSURL(string: urlString)!
         
         moviePlayer = MPMoviePlayerController(contentURL: url)
         moviePlayer.prepareToPlay()
-        //moviePlayer.view.frame = CGRect(x: 0, y: 70, width: self.view.frame.width, height: self.view.frame.height-70)
         moviePlayer.view.frame = self.view.frame
         moviePlayer.controlStyle = MPMovieControlStyle.Embedded
         moviePlayer.view.tag = 1
@@ -42,8 +35,7 @@ class VideoViewController: BaseVC {
         
         self.view.addSubview(moviePlayer.view)
         
-        
-        //moviePlayer.fullscreen = true
+
         moviePlayer.shouldAutoplay = false
         
         moviePlayer.view.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight | UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleBottomMargin | UIViewAutoresizing.FlexibleRightMargin
@@ -80,18 +72,8 @@ class VideoViewController: BaseVC {
         if let font2 = font {
             self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([NSFontAttributeName : font2, NSForegroundColorAttributeName : UIColor.whiteColor()], forState: UIControlState.Normal)
         }
-        
-        let value = UIInterfaceOrientation.LandscapeLeft.rawValue
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
-        
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let value = UIInterfaceOrientation.LandscapeLeft.rawValue
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -103,10 +85,9 @@ class VideoViewController: BaseVC {
     }
     
     func videoPlayerLoadStateDidChange(notification: NSNotification) {
-            //moviePlayer.fullscreen = true
         self.navBarHideSyncTimer?.invalidate()
         self.navBarHideSyncTimer = nil
-        self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar2"), userInfo: nil, repeats: false)
+        self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBarByTimer"), userInfo: nil, repeats: false)
     }
     
     func videoPlayerPlayStateDidChange(notification: NSNotification) {
@@ -151,16 +132,14 @@ class VideoViewController: BaseVC {
     func showNavigationBar(){
         if ((self.navigationController?.navigationBar.hidden) == true){
             self.navigationController?.setNavigationBarHidden(false, animated: true)
-            //moviePlayer.controlStyle = MPMovieControlStyle.Embedded
             self.navBarHideSyncTimer = NSTimer.scheduledTimerWithTimeInterval(self.hideTimeout, target: self, selector: Selector("showNavigationBar"), userInfo: nil, repeats: false)
         } else {
             self.navigationController?.setNavigationBarHidden(true, animated: true)
-            //moviePlayer.controlStyle = MPMovieControlStyle.None
             navBarHideSyncTimer?.invalidate()
             navBarHideSyncTimer = nil
         }
     }
-    func showNavigationBar2() {
+    func showNavigationBarByTimer() {
         showNavigationBar()
     }
     func serviceConnected() {
@@ -196,8 +175,6 @@ class VideoViewController: BaseVC {
     func doneVideoPlayer() {
         multiScreenManager.videoTime = moviePlayer.currentPlaybackTime
         self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-        let value = UIInterfaceOrientation.Portrait.rawValue
-        UIDevice.currentDevice().setValue(value, forKey: "orientation")
     }
     
     func test() {

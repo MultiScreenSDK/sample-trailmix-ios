@@ -437,5 +437,13 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         }
         
     }
+    
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    override func supportedInterfaceOrientations() -> Int {
+        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+    }
 }
 

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 import UIKit
 
-class CustomNavigationControllerViewController: UINavigationController {
+class CustomNavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,24 +37,11 @@ class CustomNavigationControllerViewController: UINavigationController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func supportedInterfaceOrientations() -> Int {
+        return self.topViewController.supportedInterfaceOrientations()
     }
-    */
-
-    internal override func supportedInterfaceOrientations() -> Int {
-        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
-    }
+    
     internal override func shouldAutorotate() -> Bool {
-        return true
+        return self.topViewController.shouldAutorotate()
     }
-//    internal override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {
-//        return visibleViewController.preferredInterfaceOrientationForPresentation()
-//    }
 }

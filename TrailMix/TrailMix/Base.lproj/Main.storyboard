@@ -80,8 +80,8 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tcI-Na-v0B">
-                                                    <rect key="frame" x="8" y="144" width="290" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <rect key="frame" x="8" y="144" width="304" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -195,10 +195,10 @@
             </objects>
             <point key="canvasLocation" x="1040" y="1029"/>
         </scene>
-        <!--Custom Navigation Controller View Controller-->
+        <!--Custom Navigation Controller-->
         <scene sceneID="Ytw-VF-0Tr">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gnU-6Z-T5W" customClass="CustomNavigationControllerViewController" customModule="TrailMix" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gnU-6Z-T5W" customClass="CustomNavigationController" customModule="TrailMix" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="EeC-zs-nTX">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -277,10 +277,10 @@
             </objects>
             <point key="canvasLocation" x="1078" y="-285"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Custom Navigation Controller-->
         <scene sceneID="GeB-Y8-Jf2">
             <objects>
-                <navigationController storyboardIdentifier="VideoViewNavController" automaticallyAdjustsScrollViewInsets="NO" id="nno-Pc-sw4" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="VideoViewNavController" automaticallyAdjustsScrollViewInsets="NO" id="nno-Pc-sw4" customClass="CustomNavigationController" customModule="TrailMix" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="5Cz-z9-HlI">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

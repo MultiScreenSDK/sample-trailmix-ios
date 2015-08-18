@@ -124,7 +124,6 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if let displayName = services[indexPath.row].displayName {
             cell.textLabel?.text = services[indexPath.row].displayName
-            //cell.textLabel?.attributedText = NSMutableAttributedString(string: "\(services[indexPath.row].name)", attributes: [NSFontAttributeName: UIFont(name: "Roboto-Light", size: 14.0)!])
         }
         
         var image : UIImage = UIImage(named: "icon_cast_discovered")!
@@ -137,9 +136,6 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
-        
-        //connectingIndicator.hidden = false
-        //connectingIndicator.startAnimating()
         if (multiScreenManager.isConnected) {
             multiScreenManager.closeApplication({ (success: Bool!) -> Void in
                 //
@@ -160,8 +156,6 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         hud.show(true)
         hud.dimBackground = true
         
-        //title.text = "Connecting"
-        /// If cell is selected then connect and start the application
         NSNotificationCenter.defaultCenter().removeObserver(self)
         
         multiScreenManager.createApplication(services[indexPath.row] as! Service, completionHandler: { (success: Bool!,error: NSError?) -> Void in
