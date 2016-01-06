@@ -30,54 +30,54 @@ class Requester {
 
     /// Create and send a POST HTTP request
     ///
-    /// - parameter url: The end point's URL
-    /// - parameter payload: The data to be POST is treared as Content-Type: text/plain; charset=utf-8 and it can be override by setting the headers dictionary
-    /// - parameter headers: Additional headers set for the request
-    /// - parameter timeout: The timeout for the request
-    /// - parameter completionHandler: The response completion closure, it will be executed in the request queue i.e. in a backgound thread
+    /// :param: url The end point's URL
+    /// :param: payload The data to be POST is treared as Content-Type: text/plain; charset=utf-8 and it can be override by setting the headers dictionary
+    /// :param: headers Additional headers set for the request
+    /// :param: timeout The timeout for the request
+    /// :param: completionHandler The response completion closure, it will be executed in the request queue i.e. in a backgound thread
     class func doPost(url: String, payload: NSData!, headers: Dictionary<String,String>!, timeout: NSTimeInterval,  completionHandler: RequestCompletionHandler) -> Void {
         doRequest(url, method: "POST", payload: payload, headers: headers, timeout: timeout, completionHandler: completionHandler);
     }
 
     /// Create and send a PUT HTTP request
     ///
-    /// - parameter url: The end point's URL
-    /// - parameter payload: The data to be PUT is treared as Content-Type: text/plain; charset=utf-8 and it can be override by setting the headers dictionary
-    /// - parameter headers: Additional headers set for the request
-    /// - parameter timeout: The timeout for the request
-    /// - parameter completionHandler: The response completion closure, it will be executed in the request queue i.e. in a backgound thread
+    /// :param: url The end point's URL
+    /// :param: payload The data to be PUT is treared as Content-Type: text/plain; charset=utf-8 and it can be override by setting the headers dictionary
+    /// :param: headers Additional headers set for the request
+    /// :param: timeout The timeout for the request
+    /// :param: completionHandler The response completion closure, it will be executed in the request queue i.e. in a backgound thread
     class func doPut(url: String, payload: NSData!, headers: Dictionary<String,String>!, timeout: NSTimeInterval,  completionHandler: RequestCompletionHandler) -> Void {
         doRequest(url, method: "PUT", payload: payload, headers: headers, timeout: timeout, completionHandler: completionHandler);
     }
 
     /// Create and send a GET HTTP request
     ///
-    /// - parameter url: The end point's URL
-    /// - parameter headers: Additional headers set for the request
-    /// - parameter timeout: The timeout for the request
-    /// - parameter completionHandler: The response completion closure, it will be executed in the request queue i.e. in a backgound thread
+    /// :param: url The end point's URL
+    /// :param: headers Additional headers set for the request
+    /// :param: timeout The timeout for the request
+    /// :param: completionHandler The response completion closure, it will be executed in the request queue i.e. in a backgound thread
     class func doGet(url: String, headers: Dictionary<String,String>!, timeout: NSTimeInterval, completionHandler: RequestCompletionHandler) {
         doRequest(url, method: "GET", payload: nil, headers: headers, timeout: timeout, completionHandler: completionHandler);
     }
 
     /// Create and send a DELETE HTTP request
     ///
-    /// - parameter url: The end point's URL
-    /// - parameter headers: Additional headers set for the request
-    /// - parameter timeout: The timeout for the request
-    /// - parameter completionHandler: The response completion closure, it will be executed in the request queue i.e. in a backgound thread
+    /// :param: url The end point's URL
+    /// :param: headers Additional headers set for the request
+    /// :param: timeout The timeout for the request
+    /// :param: completionHandler The response completion closure, it will be executed in the request queue i.e. in a backgound thread
     class func doDelete(url: String, headers: Dictionary<String,String>!, timeout: NSTimeInterval, completionHandler: RequestCompletionHandler) {
         doRequest(url, method: "Delete", payload: nil, headers: headers, timeout: timeout, completionHandler: completionHandler);
     }
 
     /// Create and send a generic HTTP request
     ///
-    /// - parameter url: The end point's URL
-    /// - parameter method: The HTTP method
-    /// - parameter payload: The data to be POST or PUT is treared as Content-Type: text/plain; charset=utf-8 and it can be override by setting the headers dictionary
-    /// - parameter headers: Additional headers set for the request
-    /// - parameter timeout: The timeout for the request
-    /// - parameter completionHandler: The response completion closure, it will be executed in the request queue i.e. in a backgound thread
+    /// :param: url The end point's URL
+    /// :param: method The HTTP method
+    /// :param: payload The data to be POST or PUT is treared as Content-Type: text/plain; charset=utf-8 and it can be override by setting the headers dictionary
+    /// :param: headers Additional headers set for the request
+    /// :param: timeout The timeout for the request
+    /// :param: completionHandler The response completion closure, it will be executed in the request queue i.e. in a backgound thread
     class func doRequest (url: String, method: String, payload: NSData!, headers: Dictionary<String,String>!, timeout: NSTimeInterval,  completionHandler: RequestCompletionHandler) -> Void {
         let queue: NSOperationQueue = NSOperationQueue()
         var req: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: url)!)
@@ -115,7 +115,7 @@ class Requester {
                 } else {
                     var errorMessage = "The server responded with code \(httpResponse.statusCode)"
                     if  let jsonResponse  = JSON.parse(data: data) as? NSDictionary {
-                        errorMessage = jsonResponse["message"]! as String
+                        errorMessage = jsonResponse["message"]! as! String
                     }
 
                     let httpError = NSError(domain: "HTTP Request", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey:errorMessage])

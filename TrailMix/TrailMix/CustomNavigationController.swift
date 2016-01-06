@@ -37,11 +37,11 @@ class CustomNavigationController: UINavigationController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return self.topViewController!.supportedInterfaceOrientations()
+    override func supportedInterfaceOrientations() -> Int {
+        return self.topViewController.supportedInterfaceOrientations()
     }
     
     internal override func shouldAutorotate() -> Bool {
-        return self.topViewController!.shouldAutorotate()
+        return self.topViewController.shouldAutorotate()
     }
 }

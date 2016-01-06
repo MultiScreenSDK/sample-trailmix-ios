@@ -123,7 +123,7 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
         let beView: UIVisualEffectView = UIVisualEffectView(effect: blurEffect)
         beView.tag = 1
         beView.frame = self.view.bounds;
-        beView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        beView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         popoverVC.view.frame = self.view.bounds
         popoverVC.view.insertSubview(beView, atIndex: 0)
         popoverVC.view.tag = 1
@@ -142,7 +142,7 @@ class BaseVC: UIViewController, UIGestureRecognizerDelegate {
         let beView: UIVisualEffectView = UIVisualEffectView(effect: blurEffect)
         beView.tag = 1
         beView.frame = self.view.bounds;
-        beView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+        beView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
         
         popoverVC.view.frame = self.view.bounds
         

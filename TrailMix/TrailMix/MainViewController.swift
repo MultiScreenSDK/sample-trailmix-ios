@@ -106,8 +106,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         //[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        let url = NSURL(string: "http://dgpcnfdr6d6y5.cloudfront.net/examples/trailmix/trailers/library.json")
-        
+        let url = NSURL(string: "http://multiscreen.samsung.com/examples/trailmix/trailers/library.json")
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) { [unowned self]  () -> Void in
             
@@ -117,18 +116,19 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
                     let httpResp = response as! NSHTTPURLResponse
                     if httpResp.statusCode == 200 {
                         
+                        var serializationError: NSError?
+                        let mediaData: [Dictionary] = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &serializationError) as! [[String:AnyObject]]
                         
-                        let mediaData: [Dictionary] = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as! [[String:AnyObject]]
-                        
-                        let mediaInfos = mediaData.map {VideoItem(title: $0["title"] as! String, fileURL: $0["file"] as! String, thumbnailURL: $0["cover"] as! String!, duration: ($0["duration"] as? Int)!,id: $0["id"] as! String, year: $0["year"] as! String, cast: $0["cast"] as! String, type: $0["type"] as! String)}
-                        
-                        self.videos.addObjectsFromArray(mediaInfos)
-                        
-                        dispatch_async(dispatch_get_main_queue(), {
-                            self.videosTableView.reloadData()
-                        })
-                        
-                        
+                        if (serializationError == nil) {
+                            let mediaInfos = mediaData.map {VideoItem(title: $0["title"] as! String, fileURL: $0["file"] as! String, thumbnailURL: $0["cover"] as! String!, duration: ($0["duration"] as? Int)!,id: $0["id"] as! String, year: $0["year"] as! String, cast: $0["cast"] as! String, type: $0["type"] as! String)}
+                            
+                            self.videos.addObjectsFromArray(mediaInfos)
+                            
+                            dispatch_async(dispatch_get_main_queue(), {
+                                self.videosTableView.reloadData()
+                            })
+                            
+                        }
                     }
                 }
             })
@@ -203,7 +203,7 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         
         // Configure the cell...
         let videoIem = (videos.objectAtIndex(indexPath.row) as! VideoItem)
-        let imageURL: String? = videoIem.thumbnailURL
+        var imageURL: String? = videoIem.thumbnailURL
         
         cell.videoInfoLabel.text = videoIem.title
         cell.videoInfoLabel.sizeToFit()
@@ -442,8 +442,8 @@ class MainViewController: BaseVC,UITableViewDataSource, UITableViewDelegate {
         return false
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    override func supportedInterfaceOrientations() -> Int {
+        return Int(UIInterfaceOrientationMask.Portrait.rawValue)
     }
 }
 

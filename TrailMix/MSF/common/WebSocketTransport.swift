@@ -39,7 +39,7 @@ class WebSocketTransport: ChannelTransport, WebSocketDelegate {
         socket?.disconnect()
     }
 
-    func close(force force: Bool) {
+    func close(#force: Bool) {
         if socket != nil && socket!.isConnected {
             socket?.disconnectStream(nil)
         }

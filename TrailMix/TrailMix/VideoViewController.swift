@@ -23,7 +23,7 @@ class VideoViewController: BaseVC {
 
         // Do any additional setup after loading the view.
         
-        let url:NSURL = NSURL(string: urlString)!
+        var url:NSURL = NSURL(string: urlString)!
         
         moviePlayer = MPMoviePlayerController(contentURL: url)
         moviePlayer.prepareToPlay()
@@ -38,7 +38,7 @@ class VideoViewController: BaseVC {
 
         moviePlayer.shouldAutoplay = false
         
-        moviePlayer.view.autoresizingMask = [UIViewAutoresizing.FlexibleWidth, UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleTopMargin, UIViewAutoresizing.FlexibleBottomMargin, UIViewAutoresizing.FlexibleRightMargin]
+        moviePlayer.view.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight | UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleBottomMargin | UIViewAutoresizing.FlexibleRightMargin
 
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "videoPlayerLoadStateDidChange:", name: MPMoviePlayerLoadStateDidChangeNotification, object: nil)
@@ -58,7 +58,7 @@ class VideoViewController: BaseVC {
         moviePlayer.play()
         
         // Adding a tap recognizer to display the hidden navigation bar on tap
-        let singleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "showNavigationBar")
+        var singleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "showNavigationBar")
         singleTapGestureRecognizer.numberOfTapsRequired = 1
         singleTapGestureRecognizer.enabled = true
         singleTapGestureRecognizer.cancelsTouchesInView = false
@@ -148,7 +148,7 @@ class VideoViewController: BaseVC {
     
     /// UIGestureRecognizerDelegate used to disable the tap event if the tapped View is not the main View
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool{
-        if (touch.view!.tag == 1){
+        if (touch.view.tag == 1){
             showNavigationBar()
             return false
         }
@@ -160,8 +160,8 @@ class VideoViewController: BaseVC {
     }
     
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Landscape
+    override func supportedInterfaceOrientations() -> Int {
+        return Int(UIInterfaceOrientationMask.Landscape.rawValue)
     }
     
     override func preferredInterfaceOrientationForPresentation() -> UIInterfaceOrientation {

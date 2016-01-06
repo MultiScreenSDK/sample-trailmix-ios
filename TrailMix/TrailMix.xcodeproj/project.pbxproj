@@ -16,6 +16,8 @@
 		CD04E6DB1B28E15500AF2EAC /* String+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6D91B28E15500AF2EAC /* String+Helpers.swift */; };
 		CD04E6DC1B28E15500AF2EAC /* UIImage+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6DA1B28E15500AF2EAC /* UIImage+Helpers.swift */; };
 		CD04E6E21B28EA1B00AF2EAC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6E11B28EA1B00AF2EAC /* VideoViewController.swift */; };
+		CD04E6EC1B28EE4F00AF2EAC /* MSF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD04E6E91B28EE3800AF2EAC /* MSF.framework */; };
+		CD04E6ED1B28EE4F00AF2EAC /* MSF.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD04E6E91B28EE3800AF2EAC /* MSF.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CD04E6F21B28EE8400AF2EAC /* MultiScreenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6F11B28EE8400AF2EAC /* MultiScreenManager.swift */; };
 		CD04E6F71B2A0CE000AF2EAC /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6F61B2A0CE000AF2EAC /* BaseVC.swift */; };
 		CD04E6FA1B2A136C00AF2EAC /* DeviceDisconnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E6F81B2A136C00AF2EAC /* DeviceDisconnectViewController.swift */; };
@@ -25,7 +27,6 @@
 		CD04E7101B2A574100AF2EAC /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */; };
 		CD04E7121B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD04E7111B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift */; };
 		CD7121581B4C75B0004AF0F0 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7121571B4C75B0004AF0F0 /* CustomNavigationController.swift */; };
-		CD8B63DD1C18FF5200C94B83 /* MSF.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD8B63DC1C18FF5200C94B83 /* MSF.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,27 @@
 			remoteGlobalIDString = CD04E6B11B28DBB900AF2EAC;
 			remoteInfo = TrailMix;
 		};
+		CD04E6E81B28EE3800AF2EAC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD04E6E31B28EE3800AF2EAC /* MSF.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B289698E19CB6FF700D73F97;
+			remoteInfo = MSF;
+		};
+		CD04E6EA1B28EE3800AF2EAC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD04E6E31B28EE3800AF2EAC /* MSF.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B289699919CB6FF700D73F97;
+			remoteInfo = MSFTests;
+		};
+		CD04E6EE1B28EE4F00AF2EAC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD04E6E31B28EE3800AF2EAC /* MSF.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B289698D19CB6FF700D73F97;
+			remoteInfo = MSF;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +67,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CD04E6ED1B28EE4F00AF2EAC /* MSF.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,6 +88,7 @@
 		CD04E6D91B28E15500AF2EAC /* String+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Helpers.swift"; sourceTree = "<group>"; };
 		CD04E6DA1B28E15500AF2EAC /* UIImage+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Helpers.swift"; sourceTree = "<group>"; };
 		CD04E6E11B28EA1B00AF2EAC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
+		CD04E6E31B28EE3800AF2EAC /* MSF.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MSF.xcodeproj; path = MSF/iOS/MSF/MSF.xcodeproj; sourceTree = "<group>"; };
 		CD04E6F11B28EE8400AF2EAC /* MultiScreenManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiScreenManager.swift; sourceTree = "<group>"; };
 		CD04E6F61B2A0CE000AF2EAC /* BaseVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		CD04E6F81B2A136C00AF2EAC /* DeviceDisconnectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceDisconnectViewController.swift; sourceTree = "<group>"; };
@@ -76,7 +100,6 @@
 		CD04E70F1B2A574100AF2EAC /* VideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		CD04E7111B2A5A4000AF2EAC /* UIImageView+AFNetworking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+AFNetworking.swift"; sourceTree = "<group>"; };
 		CD7121571B4C75B0004AF0F0 /* CustomNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
-		CD8B63DC1C18FF5200C94B83 /* MSF.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MSF.framework; path = MSF/iphonesimulator/MSF.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,7 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD8B63DD1C18FF5200C94B83 /* MSF.framework in Frameworks */,
+				CD04E6EC1B28EE4F00AF2EAC /* MSF.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,7 +124,7 @@
 		CD04E6A91B28DBB900AF2EAC = {
 			isa = PBXGroup;
 			children = (
-				CD8B63DC1C18FF5200C94B83 /* MSF.framework */,
+				CD04E6E31B28EE3800AF2EAC /* MSF.xcodeproj */,
 				CD04E6B41B28DBB900AF2EAC /* TrailMix */,
 				CD04E6CA1B28DBB900AF2EAC /* TrailMixTests */,
 				CD04E6B31B28DBB900AF2EAC /* Products */,
@@ -169,6 +192,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		CD04E6E41B28EE3800AF2EAC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD04E6E91B28EE3800AF2EAC /* MSF.framework */,
+				CD04E6EB1B28EE3800AF2EAC /* MSFTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -184,6 +216,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CD04E6EF1B28EE4F00AF2EAC /* PBXTargetDependency */,
 			);
 			name = TrailMix;
 			productName = TrailMix;
@@ -214,8 +247,6 @@
 		CD04E6AA1B28DBB900AF2EAC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftMigration = 0720;
-				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = samsung;
 				TargetAttributes = {
@@ -240,6 +271,12 @@
 			mainGroup = CD04E6A91B28DBB900AF2EAC;
 			productRefGroup = CD04E6B31B28DBB900AF2EAC /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = CD04E6E41B28EE3800AF2EAC /* Products */;
+					ProjectRef = CD04E6E31B28EE3800AF2EAC /* MSF.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				CD04E6B11B28DBB900AF2EAC /* TrailMix */,
@@ -247,6 +284,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		CD04E6E91B28EE3800AF2EAC /* MSF.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MSF.framework;
+			remoteRef = CD04E6E81B28EE3800AF2EAC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CD04E6EB1B28EE3800AF2EAC /* MSFTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MSFTests.xctest;
+			remoteRef = CD04E6EA1B28EE3800AF2EAC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CD04E6B01B28DBB900AF2EAC /* Resources */ = {
@@ -305,6 +359,11 @@
 			isa = PBXTargetDependency;
 			target = CD04E6B11B28DBB900AF2EAC /* TrailMix */;
 			targetProxy = CD04E6C81B28DBB900AF2EAC /* PBXContainerItemProxy */;
+		};
+		CD04E6EF1B28EE4F00AF2EAC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MSF;
+			targetProxy = CD04E6EE1B28EE4F00AF2EAC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -416,10 +475,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/MSF/iphonesimulator",
-				);
 				INFOPLIST_FILE = TrailMix/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -438,10 +493,6 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/MSF/iphonesimulator",
-				);
 				INFOPLIST_FILE = TrailMix/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
