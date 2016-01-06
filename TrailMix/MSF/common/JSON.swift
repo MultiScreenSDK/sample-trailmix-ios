@@ -26,38 +26,43 @@ import Foundation
 
 public class JSON {
 
-    public class func parse(#jsonString: String) -> AnyObject? {
+    public class func parse(jsonString jsonString: String) -> AnyObject? {
         let data: NSData = jsonString.dataUsingEncoding(NSUTF8StringEncoding)!
         return parse(data:data)
     }
 
-    public class func parse(#data: NSData) -> AnyObject? {
-        var e: NSError?
-        if let jsonObj: AnyObject = NSJSONSerialization.JSONObjectWithData( data, options: NSJSONReadingOptions(0), error: &e) {
+    public class func parse(data data: NSData) -> AnyObject? {
+        do {
+            let jsonObj: AnyObject = try NSJSONSerialization.JSONObjectWithData( data, options: NSJSONReadingOptions(rawValue: 0))
             return jsonObj
-        } else {
+        } catch  {
             return NSString(data: data, encoding: NSUTF8StringEncoding)!
         }
     }
 
     public class func stringify(jsonObject: AnyObject, prettyPrint: Bool = false) -> String? {
-        var error: NSError?
-        let jsonData: NSData? = NSJSONSerialization.dataWithJSONObject(jsonObject,
-            options:  (prettyPrint ? .PrettyPrinted : NSJSONWritingOptions(0)),
-            error:&error)
+
+        let jsonData: NSData?
+        do {
+            jsonData = try NSJSONSerialization.dataWithJSONObject(jsonObject,
+                        options:  (prettyPrint ? .PrettyPrinted : NSJSONWritingOptions(rawValue: 0)))
+        } catch {
+            jsonData = nil
+        }
         if (jsonData == nil) {
             return nil
         } else {
-            return  NSString(data: jsonData!, encoding: NSUTF8StringEncoding) as String?
+            return  NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
         }
     }
 
     public class func jsonDataForObject(jsonObj: AnyObject) -> NSData? {
-        var e: NSError?
-        if let jsonData = NSJSONSerialization.dataWithJSONObject(jsonObj,options: NSJSONWritingOptions(0), error: &e) {
+        do {
+            let jsonData = try NSJSONSerialization.dataWithJSONObject(jsonObj,options: NSJSONWritingOptions(rawValue: 0))
             return jsonData
+        } catch {
+            return nil
         }
-        return nil
     }
     
 }

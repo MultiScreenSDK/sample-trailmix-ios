@@ -26,7 +26,7 @@ import Foundation
 
 /// An Application represents an application on the TV device.
 /// Use this class to control various aspects of the application such as launching the app or getting information
-@objc public class Application: Channel, Printable {
+public class Application: Channel {
 
     enum ApplicationType: String {
         case Application = "ms.application"
@@ -42,7 +42,7 @@ import Foundation
         }
     }
 
-    private var clientDisconnectObserver: AnyObject?
+    private var clientDisconnectObserver: AnyObject? = nil
 
     private var type = ApplicationType.Application
 
@@ -61,17 +61,26 @@ import Foundation
 
     public private(set) var args: [String:AnyObject]? = nil
 
-    init(appId: AnyObject, channelURI: String, service: Service, args:[String:AnyObject]?) {
+    public init?(appId: AnyObject, channelURI: String, service: Service, args:[String:AnyObject]?) {
+        if channelURI.isEmpty {
+            super.init()
+            return nil;
+        }
         self.args = args
         switch appId {
         case let url as NSURL:
-            id = url.absoluteString!
+            id = url.absoluteString
             type = .WebApplication
-        case let installedId as String:
-            id = installedId
+        case let id as String:
+            self.id = id
             type = .Application
+            if id.isEmpty {
+                super.init()
+                return nil;
+            }
         default:
-            break
+            super.init()
+            return nil
         }
         super.init(uri: channelURI, service: service)
         clientDisconnectObserver = on(ChannelEvent.ClientDisconnect.rawValue, performClosure: clientDisconnect)
@@ -87,7 +96,6 @@ import Foundation
     ///
     ///  :param: completionHandler The callback handler with the status dictionary and an error if any
     public func getInfo(completionHandler: (info: [String:AnyObject]?, error: NSError?) -> Void ) {
-        let method = ApplicationMethod.Get.getDescription(type)
         var params = [String:AnyObject]()
         switch type {
         case .Application:
@@ -99,7 +107,7 @@ import Foundation
             dispatch_async(dispatch_get_main_queue(), {
                 if error != nil {
                     if data != nil {
-                        let message = JSON.parse(data: data!) as! [String:AnyObject]
+                        let message = JSON.parse(data: data!) as![String:AnyObject]
                         completionHandler(info: message, error: error)
                     } else {
                         completionHandler(info: [:], error: error)
@@ -117,7 +125,6 @@ import Foundation
     ///
     ///  :param: completionHandler The callback handler
     public func start(completionHandler: (success: Bool, error: NSError?) -> Void ) {
-        let method = ApplicationMethod.Start.getDescription(type)
         var params = [String:AnyObject]()
         switch type {
         case .Application:
@@ -129,13 +136,13 @@ import Foundation
             params["args"] = args
         }
         let data = JSON.jsonDataForObject(params)
-        println(restEndpoint)
+        
         Requester.doPost(restEndpoint, payload: data, headers: ["Content-Type":"application/json;charset=UTF-8"], timeout: 10, completionHandler: { (responseHeaders, data, error) -> Void in
             //TODO: override the error message with the one provided by the server if it was sent
             //            if data != nil {
             //                let message = JSON.parse(data: data!) as [String:AnyObject]
             //            }
-            println(error)
+            print(error)
             completionHandler(success: error == nil, error: error)
         })
     }
@@ -163,7 +170,6 @@ import Foundation
     ///
     ///  :param: completionHandler The callback handler
     public func install(completionHandler: (success: Bool, error: NSError?) -> Void) {
-        let method = ApplicationMethod.Install.getDescription(type)
         var params = [String:AnyObject]()
         switch type {
         case .Application:
@@ -208,7 +214,7 @@ import Foundation
     ///
     ///  :param: leaveHostRunning True leaves the TV app running False stops the TV app if yours is the last client
     ///  :param: completionHandler The callback handler
-    public func disconnect(#leaveHostRunning: Bool, completionHandler: ((client: ChannelClient?, error: NSError?) -> Void)!) {
+    public func disconnect(leaveHostRunning leaveHostRunning: Bool, completionHandler: ((client: ChannelClient?, error: NSError?) -> Void)!) {
         if !leaveHostRunning {
             disconnect(completionHandler)
         } else {
@@ -219,7 +225,7 @@ import Foundation
     ///  Disconnect from the channel and leave the host application running if leaveHostRunning is set to true and you are the last client
     ///
     ///  :param: leaveHostRunning True leaves the TV app running False stops the TV app if yours is the last client
-    public func disconnect(#leaveHostRunning: Bool) {
+    public func disconnect(leaveHostRunning leaveHostRunning: Bool) {
         disconnect(leaveHostRunning: leaveHostRunning, completionHandler: nil)
     }
 
@@ -239,7 +245,7 @@ import Foundation
             } else {
                 disconnectCompletionHandler = completionHandler
             }
-            stop { [unowned self] (success, error) -> Void in
+            stop { (success, error) -> Void in
             }
         } else {
             superDisconnect(completionHandler)
@@ -268,7 +274,7 @@ import Foundation
     }
 
     // MARK: - Printable -
-    public var description: String {
+    override public var description: String {
         return uri
     }
 }

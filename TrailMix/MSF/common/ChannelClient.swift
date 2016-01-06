@@ -25,7 +25,7 @@ THE SOFTWARE.
 import Foundation
 
 ///  A client currently connected to the channel
-@objc public class ChannelClient: Printable, Equatable {
+public class ChannelClient: NSObject {
 
     var clientInfo: [String:AnyObject]
 
@@ -54,7 +54,7 @@ import Foundation
     }
 
     /// The description of the client
-    public var description: String {
+    public override var description: String {
         get {
             return "id: \(id) isHost \(isHost)"
         }
@@ -62,9 +62,9 @@ import Foundation
 
     ///  The initializer
     ///
-    ///  :param: clientInfo: A dictionary with the client information
+    ///  - parameter clientInfo:: A dictionary with the client information
     ///
-    ///  :returns: A ChannelClient instance
+    ///  - returns: A ChannelClient instance
     internal init (clientInfo: [String:AnyObject]) {
         self.clientInfo = clientInfo
     }

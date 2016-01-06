@@ -78,9 +78,9 @@ class RPCResultHandler {
 @objc public protocol ChannelDelegate: class {
     ///  Called when the Channel is connected
     ///
-    ///  :param: client: The Client that just connected to the Channel
+    ///  - parameter client:: The Client that just connected to the Channel
     ///
-    ///  :param: error: An error info if any
+    ///  - parameter error:: An error info if any
     optional func onConnect(client: ChannelClient?, error: NSError?)
 
     ///  Called when the host app is ready to send or receive messages
@@ -90,42 +90,42 @@ class RPCResultHandler {
 
     ///  Called when the Channel is disconnected
     ///
-    ///  :param: client The Client that just disconnected from the Channel
+    ///  - parameter client: The Client that just disconnected from the Channel
     ///
-    ///  :param: error: An error info if any
+    ///  - parameter error:: An error info if any
     optional func onDisconnect(client: ChannelClient?, error: NSError?)
 
     ///  Called when the Channel receives a text message
     ///
-    ///  :param: message: Text message received
+    ///  - parameter message:: Text message received
     optional func onMessage(message: Message)
 
     ///  Called when the Channel receives a binary data message
     ///
-    ///  :param: message: Text message received
-    ///  :param: payload: Binary payload data
+    ///  - parameter message:: Text message received
+    ///  - parameter payload:: Binary payload data
     optional func onData(message: Message, payload: NSData)
 
     ///  Called when a client connects to the Channel
     ///
-    ///  :param: client: The Client that just connected to the Channel
+    ///  - parameter client:: The Client that just connected to the Channel
     optional func onClientConnect(client: ChannelClient)
 
     ///  Called when a client disconnects from the Channel
     ///
-    ///  :param: client: The Client that just disconnected from the Channel
+    ///  - parameter client:: The Client that just disconnected from the Channel
     optional func onClientDisconnect(client: ChannelClient)
 
     ///  Called when a Channel Error is fired
     ///
-    ///  :param: error: The error
+    ///  - parameter error:: The error
     optional func onError(error: NSError)
 }
 
 ///  A Channel is a discreet connection where multiple clients can communicate
 ///
 ///  :since: 2.0
-@objc public class Channel: ChannelTransportDelegate {
+public class Channel: NSObject, ChannelTransportDelegate {
 
     ///  The availble methods for the channel
     ///
@@ -144,7 +144,7 @@ class RPCResultHandler {
     private var rpcHandlers = [String: RPCResultHandler]()
 
     /// The uri of the channel ('chat')
-    public private(set) var uri: String! = nil
+    public private(set) var uri: String!
 
     /// the service that is suplaying the channel connection
     public private(set) var service : Service! = nil
@@ -171,26 +171,33 @@ class RPCResultHandler {
 
     private var lastPingDate: NSDate? = nil
 
+    ///  A default initializer that returns a nil instance
+    ///
+    ///  - returns: nil
+    internal override init() {
+    }
+
     ///  Internal initializer
     ///
-    ///  :param: url     The endpoint for the channel
-    ///  :param: service The serivice providing the connectivity
+    ///  - parameter url:     The endpoint for the channel
+    ///  - parameter service: The serivice providing the connectivity
     ///
-    ///  :returns: A channel instance
+    ///  - returns: A channel instance
     ///
     internal init(uri: String, service :Service) {
         self.uri = uri
         self.service = service
         let channelURL = service.uri + "channels/" + self.uri
         transport = ChannelTransportFactory.channelTrasportForType(channelURL, service: service)
+        super.init()
         transport.delegate = self
     }
 
     ///  sendRPC invokes a remote method
     ///
-    ///  :param: method  The method to be invoked
-    ///  :param: params  The parameters for the remote procedure
-    ///  :param: handler The response/result closure
+    ///  - parameter method:  The method to be invoked
+    ///  - parameter params:  The parameters for the remote procedure
+    ///  - parameter handler: The response/result closure
     ///
     internal func sendRPC(method: String, params: [String:AnyObject]?, handler: ((message: RPCMessage) -> Void) ) {
         let uuid = NSUUID().UUIDString
@@ -218,7 +225,7 @@ class RPCResultHandler {
     ///  ChannelEvent.Connect notification upon completion.
     ///  When a TV application connects to this channel, the onReady method/notification is also fired
     ///
-    ///  :param: attributes Any attributes you want to associate with the client (ie. ["name":"FooBar"])
+    ///  - parameter attributes: Any attributes you want to associate with the client (ie. ["name":"FooBar"])
     ///
     public func connect(attributes: [String:String]?) {
         connect(attributes, completionHandler: nil)
@@ -228,8 +235,8 @@ class RPCResultHandler {
     ///  ChannelEvent.Connect notification upon completion.
     ///  When a TV application connects to this channel, the onReady method/notification is also fired
     ///
-    ///  :param: attributes        Any attributes you want to associate with the client (ie. ["name":"FooBar"])
-    ///  :param: completionHandler The callback handler
+    ///  - parameter attributes:        Any attributes you want to associate with the client (ie. ["name":"FooBar"])
+    ///  - parameter completionHandler: The callback handler
     ///
     public func connect(attributes: [String:String]?, completionHandler: ((client: ChannelClient?, error: NSError?) -> Void)!) {
         var observer: AnyObject!
@@ -248,7 +255,7 @@ class RPCResultHandler {
     ///  Disconnects from the channel. This method will asynchronously call the delegate's onDisconnect and post a
     ///  ChannelEvent.Disconnect notification upon completion.
     ///
-    ///  :param: completionHandler: The callback handler
+    ///  - parameter completionHandler:: The callback handler
     ///
     ///   - client: The client that is disconnecting which is yourself
     ///   - error: An error info if disconnect fails
@@ -275,37 +282,37 @@ class RPCResultHandler {
 
     ///  Publish an event containing a text message payload
     ///
-    ///  :param: event:   The event name
-    ///  :param: message: A JSON serializable message object
-    public func publish(#event: String, message: AnyObject?) {
+    ///  - parameter event::   The event name
+    ///  - parameter message:: A JSON serializable message object
+    public func publish(event event: String, message: AnyObject?) {
         emit(event: event, message: message, target: MessageTarget.Broadcast.rawValue, data: nil)
     }
 
     ///  Publish an event containing a text message and binary payload
     ///
-    ///  :param: event:   The event name
-    ///  :param: message: A JSON serializable message object
-    ///  :param: data:    Any binary data to send with the message
-    public func publish(#event: String, message: AnyObject?, data: NSData) {
+    ///  - parameter event::   The event name
+    ///  - parameter message:: A JSON serializable message object
+    ///  - parameter data::    Any binary data to send with the message
+    public func publish(event event: String, message: AnyObject?, data: NSData) {
         emit(event: event, message: message, target: MessageTarget.Broadcast.rawValue, data: data)
     }
 
     ///  Publish an event with text message payload to one or more targets
     ///
-    ///  :param: event:   The event name
-    ///  :param: message: A JSON serializable message object
-    ///  :param: target:  The target recipient(s) of the message.Can be a string client id, a collection of ids or a string MessageTarget (like MessageTarget.All.rawValue)
-    public func publish(#event: String, message: AnyObject?, target: AnyObject) {
+    ///  - parameter event::   The event name
+    ///  - parameter message:: A JSON serializable message object
+    ///  - parameter target::  The target recipient(s) of the message.Can be a string client id, a collection of ids or a string MessageTarget (like MessageTarget.All.rawValue)
+    public func publish(event event: String, message: AnyObject?, target: AnyObject) {
         emit(event: event, message: message, target: target, data: nil)
     }
 
     ///  Publish an event containing a text message and binary payload to one or more targets
     ///
-    ///  :param: event:   The event name
-    ///  :param: message: A JSON serializable message object
-    ///  :param: data:    Any binary data to send with the message
-    ///  :param: target:  The target recipient(s) of the message.Can be a string client id, a collection of ids or a string MessageTarget (like MessageTarget.All.rawValue)
-    public func publish(#event: String, message: AnyObject?, data: NSData, target: AnyObject ) {
+    ///  - parameter event::   The event name
+    ///  - parameter message:: A JSON serializable message object
+    ///  - parameter data::    Any binary data to send with the message
+    ///  - parameter target::  The target recipient(s) of the message.Can be a string client id, a collection of ids or a string MessageTarget (like MessageTarget.All.rawValue)
+    public func publish(event event: String, message: AnyObject?, data: NSData, target: AnyObject ) {
         emit(event: event, message: message, target: target, data: data)
     }
 
@@ -315,7 +322,7 @@ class RPCResultHandler {
         return clientList as! [ChannelClient]
     }
 
-    internal func emit(#event: String, message: AnyObject?, target: AnyObject, data: NSData?) {
+    internal func emit(event event: String, message: AnyObject?, target: AnyObject, data: NSData?) {
         if let messageEnvelope = getMessageEnvelope(ChannelMethod.Emit.rawValue, event: event, message: message, target: target) {
             if let stringMessage = JSON.stringify(messageEnvelope) {
                 if data == nil {
@@ -325,24 +332,24 @@ class RPCResultHandler {
                 }
             } else {
                 //TODO: report an error
-                println("Unable to serialize the message")
+                print("Unable to serialize the message")
             }
         }
     }
 
     ///  A convenience method to subscribe for notifications using blocks
     ///
-    ///  :param: notificationName: The name of the notification
-    ///  :param: performClosure:   The notification block, this block will be executed in the main thread
+    ///  - parameter notificationName:: The name of the notification
+    ///  - parameter performClosure::   The notification block, this block will be executed in the main thread
     ///
-    ///  :returns: An observer handler for removing/unsubscribing the block from notifications
+    ///  - returns: An observer handler for removing/unsubscribing the block from notifications
     public func on(notificationName: String, performClosure:(NSNotification!) -> Void) -> AnyObject? {
         return NSNotificationCenter.defaultCenter().addObserverForName(notificationName, object: self, queue: NSOperationQueue.mainQueue(), usingBlock: performClosure)
     }
 
     ///  A convenience method to unsubscribe from notifications
     ///
-    ///  :param: observer: The observer object to unregister observations
+    ///  - parameter observer:: The observer object to unregister observations
     public func off(observer: AnyObject) {
         NSNotificationCenter.defaultCenter().removeObserver(observer)
     }
@@ -408,7 +415,7 @@ class RPCResultHandler {
         let headLen =  Int(UInt16(bigEndian: headByteLen))
         let messageData = data.subdataWithRange(NSMakeRange(2, headLen))
         if let message = NSString(data: messageData, encoding: NSUTF8StringEncoding) {
-            var payload = data.subdataWithRange(NSMakeRange(headLen + 2, data.length - 2 - headLen ))
+            let payload = data.subdataWithRange(NSMakeRange(headLen + 2, data.length - 2 - headLen ))
             return ["message": message, "payload": payload]
         } else {
             return nil
@@ -416,7 +423,7 @@ class RPCResultHandler {
     }
 
     private func removeObject<T:Equatable>(inout arr:Array<T>, object:T) -> T? {
-        if let found = find(arr,object) {
+        if let found = arr.indexOf(object) {
             return arr.removeAtIndex(found)
         }
         return nil
@@ -431,7 +438,6 @@ class RPCResultHandler {
 
     func processMessage(message: Message) {
         if let event = ChannelEvent(rawValue: message.event) {
-            let now = NSDate()
             switch event {
             case .Connect:
                 let id = message.data!.valueForKeyPath("id") as? String
@@ -479,7 +485,7 @@ class RPCResultHandler {
                 delegate?.onError?(channelError)
                 NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: message.event, object: self, userInfo: ["error":channelError]))
             default:
-                println("unhandled message event?")
+                print("unhandled message event?")
             }
         } else {
             NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: message.event, object: self, userInfo: ["message":message]))
@@ -490,7 +496,7 @@ class RPCResultHandler {
     // MARK: - WebsocketDelegate Methods -
     func processTextMessage(message: String) {
         if let result: [String:AnyObject] = JSON.parse(jsonString: message) as? [String:AnyObject] {
-            if let id: AnyObject = result["id"] {
+            if let _: AnyObject = result["id"] {
                 let message = RPCMessage(message: result)
                 processRPCMessage(message)
             } else {
@@ -551,7 +557,7 @@ class RPCResultHandler {
     private func startConnectionAliveCheck() {
         if connectionTimeout > 0 {
             if isConnected && self.me != nil {
-                lastPingDate = nil
+//                lastPingDate = nil
                 dispatch_async(dispatch_get_main_queue()) { [unowned self]  () -> Void in
                     self.pingTimer = NSTimer.scheduledTimerWithTimeInterval(self.connectionTimeout, target: self, selector: Selector("checkConnectionAlive"), userInfo: nil, repeats: true)
                     self.emit(event: ChannelEvent.Ping.rawValue, message: "", target: self.me, data: nil)
@@ -563,17 +569,14 @@ class RPCResultHandler {
     internal func checkConnectionAlive() {
         if lastPingDate == nil {
             stopConnectionAliveCheck()
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) { [unowned self]  () -> Void in
-                self.transport.close(force: true)
-            }
+            transport.close(force: true)
         } else {
             if isConnected && me != nil {
                 lastPingDate = nil
-                emit(event: ChannelEvent.Ping.rawValue, message: "", target: me, data: nil)
+                self.emit(event: ChannelEvent.Ping.rawValue, message: "", target: self.me, data: nil)
             }
         }
     }
-
 }
 
 

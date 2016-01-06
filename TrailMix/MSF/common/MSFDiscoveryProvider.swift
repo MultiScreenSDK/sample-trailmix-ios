@@ -66,34 +66,64 @@ class MSFDiscoveryProvider: ServiceSearchProviderBase {
             self.udpListeningSocket.setIPv6Enabled(false)
             self.udpListeningSocket.setMaxReceiveIPv4BufferSize(self.MAX_MESSAGE_LENGTH)
 
-            self.udpListeningSocket.bindToPort(self.MULTICAST_PORT, error: &error)
+            do {
+                try self.udpListeningSocket.bindToPort(self.MULTICAST_PORT)
+            } catch let error1 as NSError {
+                error = error1
+            } catch {
+                fatalError()
+            }
             if error != nil {
-                println("udpListeningSocket bindToPort \(error)")
+                print("udpListeningSocket bindToPort \(error)")
             }
 
 
-            self.udpListeningSocket.joinMulticastGroup(self.MULTICAST_ADDRESS, error: &error)
+            do {
+                try self.udpListeningSocket.joinMulticastGroup(self.MULTICAST_ADDRESS)
+            } catch let error1 as NSError {
+                error = error1
+            } catch {
+                fatalError()
+            }
             if error != nil {
-                println("udpListeningSocket joinMulticastGroup \(error)")
+                print("udpListeningSocket joinMulticastGroup \(error)")
             }
 
-            self.udpListeningSocket.beginReceiving(&error)
+            do {
+                try self.udpListeningSocket.beginReceiving()
+            } catch let error1 as NSError {
+                error = error1
+            } catch {
+                fatalError()
+            }
             if error != nil {
-                println("udpListeningSocket  beginReceiving \(error)")
+                print("udpListeningSocket  beginReceiving \(error)")
             }
 
             self.udpSearchSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: self.accessQueue)
             self.udpSearchSocket.setIPv6Enabled(false)
             self.udpSearchSocket.setMaxReceiveIPv4BufferSize(self.MAX_MESSAGE_LENGTH)
 
-            self.udpSearchSocket.bindToPort(0, error: &error)
+            do {
+                try self.udpSearchSocket.bindToPort(0)
+            } catch let error1 as NSError {
+                error = error1
+            } catch {
+                fatalError()
+            }
             if error != nil {
-                println("udpSearchSocket  bindToPort \(error)")
+                print("udpSearchSocket  bindToPort \(error)")
             }
 
-            self.udpSearchSocket.beginReceiving(&error)
+            do {
+                try self.udpSearchSocket.beginReceiving()
+            } catch let error1 as NSError {
+                error = error1
+            } catch {
+                fatalError()
+            }
             if error != nil {
-                println("udpSearchSocket  beginReceiving \(error)")
+                print("udpSearchSocket  beginReceiving \(error)")
             }
 
             self.udpSearchSocket.sendData(self.getMessageEnvelope(), toHost: self.MULTICAST_ADDRESS, port: self.MULTICAST_PORT, withTimeout: NSTimeInterval(-1), tag: 0)
@@ -115,7 +145,6 @@ class MSFDiscoveryProvider: ServiceSearchProviderBase {
             for key in keys {
                 if self.services[key]?.compare(now) == NSComparisonResult.OrderedAscending {
                     self.services.removeObjectForKey(key)
-                    println("MSFD -> self.services \(key) \(self.services)")
                     self.delegate?.onServiceLost(key, discoveryType: self.type)
                 }
             }
@@ -132,9 +161,11 @@ class MSFDiscoveryProvider: ServiceSearchProviderBase {
                     self.timer = nil
                 }
 
-                var error: NSError? = nil
-
-                self.udpListeningSocket.leaveMulticastGroup(self.MULTICAST_ADDRESS, error: &error)
+                do {
+                    try self.udpListeningSocket.leaveMulticastGroup(self.MULTICAST_ADDRESS)
+                } catch {
+                    fatalError()
+                }
                 self.udpListeningSocket = nil
 
                 self.udpSearchSocket = nil
@@ -208,7 +239,6 @@ class MSFDiscoveryProvider: ServiceSearchProviderBase {
                 if let uri = msg.objectForKey("data")?.objectForKey("v2")?.objectForKey("uri") as? String {
                     let ttl = msg["ttl"] as! Double
                     if services[sid] == nil {
-                        println("MSFD -> serviceFound \(sid) \(uri)")
                         services[sid] = NSDate(timeIntervalSinceNow: NSTimeInterval(ttl/1000.0))
                         delegate!.onServiceFound(sid, serviceURI: uri, discoveryType: ServiceSearchDiscoveryType.LAN)
                     } else {
@@ -220,7 +250,7 @@ class MSFDiscoveryProvider: ServiceSearchProviderBase {
     }
 
     private func getMessageEnvelope() -> NSData {
-        var msg: [String: AnyObject] = [
+        let msg: [String: AnyObject] = [
             "type": MSFDMessageType.Discover.rawValue,
             "data": [:],
             "cuid":  NSUUID().UUIDString

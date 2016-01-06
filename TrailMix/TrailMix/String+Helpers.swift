@@ -27,15 +27,15 @@ import MSF
 
 extension String {
     func URLEncodedString() -> String? {
-        var customAllowedSet =  NSCharacterSet.URLQueryAllowedCharacterSet()
+        let customAllowedSet =  NSCharacterSet.URLQueryAllowedCharacterSet()
         
-        var escapedString = self.stringByAddingPercentEncodingWithAllowedCharacters(customAllowedSet)
+        let escapedString = self.stringByAddingPercentEncodingWithAllowedCharacters(customAllowedSet)
         
         return escapedString
     }
     
     func stringToColor() -> UIColor {
-        var temp = self.stringByReplacingOccurrencesOfString("#", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        let temp = self.stringByReplacingOccurrencesOfString("#", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
         var hexInt: UInt32 = 0
         let scanner = NSScanner(string: temp)
         scanner.scanHexInt(&hexInt)

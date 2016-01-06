@@ -101,11 +101,10 @@ class ChannelAPITests: XCTestCase {
                     assert(!self.hostService.name.isEmpty, "The name string must be set")
                     assert(!self.hostService.uri.isEmpty, "The uri string must be set")
                     assert(!self.hostService.version.isEmpty, "The version string must be set")
-                    println(service!.name)
                 }
                 messageReceivedExpectation.fulfill()
             })
-            self.waitForExpectationsWithTimeout(10, handler: { [unowned self] (error) -> Void in
+            self.waitForExpectationsWithTimeout(10, handler: {  (error) -> Void in
 
             })
         //}
@@ -123,7 +122,7 @@ class ChannelAPITests: XCTestCase {
             }
             messageReceivedExpectation.fulfill()
         })
-        self.waitForExpectationsWithTimeout(1000, handler: { [unowned self] (error) -> Void in
+        self.waitForExpectationsWithTimeout(1000, handler: {  (error) -> Void in
 
         })
     }
@@ -140,11 +139,10 @@ class ChannelAPITests: XCTestCase {
         let readyObserver: AnyObject? = host.on(ChannelEvent.Connect.rawValue, performClosure: { (notification) -> Void in
             var info = notification.userInfo as? [String:AnyObject]
             assert(info != nil, "expected userInfo must not be nil")
-            var me = info!["client"] as? ChannelClient
+            let me = info!["client"] as? ChannelClient
             assert(me != nil, "expected client must not be nil")
             assert(me?.id.isEmpty == false, "the Id must not be empty")
             assert(me?.isHost == true, "this connection end point if for the host")
-            println(notification.userInfo)
 
         })
 
@@ -188,7 +186,6 @@ class ChannelAPITests: XCTestCase {
             });
 
             readyObserver = self.client1.on(ChannelEvent.Ready.rawValue, performClosure: { (notification) -> Void in
-                println(notification)
                 if (gotClientConnectEvent) {
                     clientConnectExpectation.fulfill()
                 } else {
@@ -231,8 +228,8 @@ class ChannelAPITests: XCTestCase {
         let from = self.host.me.id
 
         let messageObserver: AnyObject? = client1.on("data", performClosure: { (notification) -> Void in
-            let message: Message = notification.userInfo!["message"] as Message
-            let payload: NSData =  notification.userInfo!["payload"] as NSData
+            let message: Message = notification.userInfo!["message"] as! Message
+            let payload: NSData =  notification.userInfo!["payload"] as! NSData
             assert(message.data is [String:String], "expected a dictionary")
             assert("data" == message.event, "The received event is not 'say'")
             assert(message.from == from, "The sender must be the host")
@@ -266,7 +263,6 @@ class ChannelAPITests: XCTestCase {
         });
 
         let readyObserver: AnyObject? = client2.on(ChannelEvent.Ready.rawValue, performClosure: { (notification) -> Void in
-            println(notification)
             if (gotClientConnectHostEvent && gotClientConnectClient1Event) {
                 clientConnectExpectation.fulfill()
             } else {
@@ -311,7 +307,6 @@ class ChannelAPITests: XCTestCase {
         })
 
         client2.disconnect { (client, error) -> Void in
-            println("client2.disconnect")
             client2DisconnectExpectation.fulfill()
         }
 

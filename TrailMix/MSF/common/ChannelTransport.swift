@@ -36,7 +36,7 @@ protocol ChannelTransport {
     weak var delegate: ChannelTransportDelegate! {get set}
     init (url: String, service: Service?)
     func close()
-    func close(#force: Bool)
+    func close(force force: Bool)
     func connect(options: [String:String]?)
     func send(message: String)
     func sendData(data: NSData)

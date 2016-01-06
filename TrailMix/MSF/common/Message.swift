@@ -25,7 +25,7 @@ THE SOFTWARE.
 import Foundation
 
 ///  This class encapsulates the message that
-@objc public class Message {
+public class Message: NSObject {
     /// The event name
     public let event: String
 
@@ -37,9 +37,9 @@ import Foundation
 
     ///  The initializer
     ///
-    ///  :param: message A dictionary containing the message
+    ///  - parameter message: A dictionary containing the message
     ///
-    ///  :returns: A Message instance
+    ///  - returns: A Message instance
     internal init(message: [String:AnyObject]) {
         event = message["event"] as! String
         data = message["data"] as AnyObject?

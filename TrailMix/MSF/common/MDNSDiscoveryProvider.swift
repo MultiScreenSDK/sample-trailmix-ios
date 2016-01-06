@@ -61,7 +61,7 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
         if id == nil {
             serviceBrowser.searchForServicesOfType(ServiceType, inDomain: ServiceDomain)
         } else {
-            var aNetService = NSNetService(domain: ServiceDomain, type: ServiceType, name: id!)
+            let aNetService = NSNetService(domain: ServiceDomain, type: ServiceType, name: id!)
             netServiceBrowser(serviceBrowser, didFindService: aNetService, moreComing: false)
         }
 
@@ -76,7 +76,7 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
     // MARK: - Service -
 
     func removeObject<T:Equatable>(inout arr:Array<T>, object:T) -> T? {
-        if let found = find(arr,object) {
+        if let found = arr.indexOf(object)  {
             return arr.removeAtIndex(found)
         }
         return nil
@@ -103,14 +103,15 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
         }
     }
 
-    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser, didNotSearch errorDict: [NSObject : AnyObject]) {
+    func netServiceBrowser(browser: NSNetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
         serviceBrowser.stop()
-        netServiceBrowserDidStopSearch(aNetServiceBrowser)
+        netServiceBrowserDidStopSearch(browser)
     }
 
+
     func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser, didFindService aNetService: NSNetService, moreComing: Bool) {
-        if let found = find(netServices, aNetService) {
-            println("ignoring \(netServices[found].name)")
+        if let found = netServices.indexOf(aNetService) {
+            print("ignoring \(netServices[found].name)")
         } else {
             aNetService.delegate = self
             aNetService.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
@@ -119,31 +120,32 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
         }        
     }
 
-    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser, didRemoveService aNetService: NSNetService, moreComing: Bool) {
-        aNetService.stop()
-        aNetService.delegate = nil
-        removeService(aNetService)
-        delegate?.onServiceLost(aNetService.name, discoveryType: self.type)
+    func netServiceBrowser(browser: NSNetServiceBrowser, didRemoveService service: NSNetService, moreComing: Bool) {
+        service.stop()
+        service.delegate = nil
+        removeService(service)
+        delegate?.onServiceLost(service.name, discoveryType: self.type)
     }
 
     // MARK: - NSNetServiceDelegate  -
 
-    func netService(aNetService: NSNetService, didNotResolve errorDict: [NSObject : AnyObject]) {
+    func netService(sender: NSNetService, didNotResolve errorDict: [String : NSNumber]) {
         if id != nil {
             delegate?.onStop(self)
-        } else if retryResolve.containsObject(aNetService.name) {
-            retryResolve.removeObject(aNetService.name)
-            removeService(aNetService)
+        } else if retryResolve.containsObject(sender.name) {
+            retryResolve.removeObject(sender.name)
+            removeService(sender)
         } else {
-            retryResolve.addObject(aNetService.name)
-            aNetService.resolveWithTimeout(NSTimeInterval(15))
+            retryResolve.addObject(sender.name)
+            sender.resolveWithTimeout(NSTimeInterval(15))
         }
     }
 
-    func netServiceDidResolveAddress(aNetService: NSNetService) {
+
+    func netServiceDidResolveAddress(sender: NSNetService) {
         //The text record have the API root URI so the implementer can contruct the REST endpoint for App management
-        if aNetService.addresses!.count > 0 {
-            let txtRecord : NSDictionary = NSNetService.dictionaryFromTXTRecordData(aNetService.TXTRecordData()) as NSDictionary
+        if sender.addresses!.count > 0 {
+            let txtRecord : NSDictionary = NSNetService.dictionaryFromTXTRecordData(sender.TXTRecordData()!) as NSDictionary
             if let endpointData = txtRecord["se"] as? NSData {
                 let endpoint: String = NSString(bytes: endpointData.bytes, length: endpointData.length, encoding: NSUTF8StringEncoding) as! String
                 let uuidData = txtRecord["id"] as! NSData
@@ -152,8 +154,8 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
             }
         }
         //release resources
-        aNetService.delegate = nil
-        removeService(aNetService)
+        sender.delegate = nil
+        removeService(sender)
     }
 
 }

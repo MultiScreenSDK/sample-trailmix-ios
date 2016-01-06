@@ -39,7 +39,7 @@ class WebSocketTransport: ChannelTransport, WebSocketDelegate {
         socket?.disconnect()
     }
 
-    func close(#force: Bool) {
+    func close(force force: Bool) {
         if socket != nil && socket!.isConnected {
             socket?.disconnectStream(nil)
         }
@@ -56,6 +56,7 @@ class WebSocketTransport: ChannelTransport, WebSocketDelegate {
         }
         socket = WebSocket(url: NSURL(string: NSString(string:  url + optionsString).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!)
         socket!.delegate = self
+        socket!.headers["User-Agent"] = "MSF/2.0"
         socket!.connect()
     }
 

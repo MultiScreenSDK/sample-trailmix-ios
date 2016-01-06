@@ -42,18 +42,18 @@ internal protocol ServiceSearchProviderDelegate: class {
     ///  ServiceSearchProvider will call this delegate method when a service is found
     ///  the delegate object must append the service to the services list if is not
     ///
-    ///  :param: serviceURI The found service URI
+    ///  - parameter serviceURI: The found service URI
     ///
-    ///  :param: discoveryType: Service Search Discovery Type
+    ///  - parameter discoveryType:: Service Search Discovery Type
     func onServiceFound(serviceId: String, serviceURI: String, discoveryType: ServiceSearchDiscoveryType)
 
     ///  ServiceSearchProvider will call this delegate method when a service is lost
     ///  the delegate object must remove the service if there are not more search
     ///  providers for the service
     ///
-    ///  :param: serviceId The service id
+    ///  - parameter serviceId: The service id
     ///
-    ///  :param: provider Service Search Provider
+    ///  - parameter provider: Service Search Provider
     func onServiceLost(serviceId: String, discoveryType: ServiceSearchDiscoveryType)
 
     ///  The ServiceSearch will call this delegate method after stopping the search
@@ -118,12 +118,12 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
 @objc public protocol ServiceSearchDelegate {
     ///  The ServiceSearch will call this delegate method when a service is found
     ///
-    ///  :param: service The found service
+    ///  - parameter service: The found service
     optional func onServiceFound(service: Service)
 
     ///  The ServiceSearch will call this delegate method when a service is lost
     ///
-    ///  :param: service The lost service
+    ///  - parameter service: The lost service
     optional func onServiceLost(service: Service)
 
     ///  The ServiceSearch will call this delegate method after stopping the search
@@ -134,7 +134,7 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
 }
 
 ///  This class searches the local network for compatible multiscreen services
-@objc public class ServiceSearch: ServiceSearchProviderDelegate {
+public class ServiceSearch: ServiceSearchProviderDelegate {
 
     internal var discoveryProviders: [ServiceSearchProvider] = []
 
@@ -181,28 +181,25 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
     }
 
     func setup(id: String?) {
-        let objectType = String.self
-        let newObject: String = objectType("")
-
         for provider in discoveryProvidersTypes {
-            var providerInstance = provider(delegate: self, id: id)
+            let providerInstance = provider.init(delegate: self, id: id)
             discoveryProviders.append(providerInstance)
         }
     }
 
     ///  A convenience method to suscribe for notifications using blocks
     ///
-    ///  :param: notificationName: The name of the notification
-    ///  :param: performClosure:   The notification block, this block will be executed in the main thread
+    ///  - parameter notificationName:: The name of the notification
+    ///  - parameter performClosure::   The notification block, this block will be executed in the main thread
     ///
-    ///  :returns: An observer handler for removing/unsubscribing the block from notifications
+    ///  - returns: An observer handler for removing/unsubscribing the block from notifications
     public func on(notificationName: String, performClosure:(NSNotification!) -> Void) -> AnyObject {
         return NSNotificationCenter.defaultCenter().addObserverForName(notificationName, object: self, queue: NSOperationQueue.mainQueue(), usingBlock: performClosure)
     }
 
     ///  A convenience method to unsuscribe from notifications
     ///
-    ///  :param: observer: The observer object to unregister observations
+    ///  - parameter observer:: The observer object to unregister observations
     public func off(observer: AnyObject) {
         NSNotificationCenter.defaultCenter().removeObserver(observer)
     }
@@ -235,10 +232,10 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
     }
 
     func removeObject<T:Equatable>(inout arr:Array<T>, object:T) -> T? {
-        if let found = find(arr,object) {
+        if let found = arr.indexOf(object) {
             return arr.removeAtIndex(found)
         } else {
-            println("removeObject not found")
+            print("removeObject not found")
         }
         return nil
     }
@@ -249,19 +246,17 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
         dispatch_async(self.accessQueue) { [unowned self] in
             var endpoint = serviceURI.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: " "))
             endpoint = endpoint.lowercaseString
-            println("search -> onServiceResolved starting \(endpoint)")
             if !self.resolvedServices.containsObject(endpoint) && !self.unresolvedServices.containsObject(endpoint) {
                 self.unresolvedServices.addObject(endpoint)
                 Service.getByURI(endpoint, timeout: NSTimeInterval(5)) { (service, error) -> Void in
                     dispatch_async(self.accessQueue, { [unowned self] () -> Void in
                         if service != nil {
-                            println("search -> onServiceResolved \(endpoint) \(service!.uri)")
                             self.unresolvedServices.removeObject(endpoint)
                             self.resolvedServices.addObject(endpoint)
                             service!.discoveryType = discoveryType
                             self.onServiceFound(service!, discoveryType: discoveryType)
                         } else {
-                            println("search -> onServiceResolved failed \(endpoint) \(error)")
+                            print("search -> onServiceResolved failed \(endpoint) \(error)")
                             self.unresolvedServices.removeObject(endpoint)
                             self.resolvedServices.removeObject(endpoint)
                             for index in 0 ..< self.discoveryProviders.count {
@@ -273,20 +268,18 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
                     })
                 }
             } else {
-                println("search -> onServiceResolved ignoring \(endpoint)")
+                print("search -> onServiceResolved ignoring \(endpoint)")
             }
         }
     }
 
     private func onServiceFound(service: Service, discoveryType: ServiceSearchDiscoveryType) {
         dispatch_async(self.accessQueue) { [unowned self] in
-            if let found = find(self.servicesCache, service) { // ignore the service
-                println("search -> onServiceFound in cache \(service.uri)")
+            if self.servicesCache.indexOf(service) != nil { // ignore the service
                 return
             }
             self.servicesCache.append(service)
             dispatch_async(dispatch_get_main_queue()) { [unowned self]  () -> Void in
-                println("search -> onServiceFound  \(service.uri)")
                 self.delegate?.onServiceFound?(service)
                 NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: MSDidFindService, object: self, userInfo: ["finder":self,"service":service]))
             }
@@ -299,7 +292,6 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
             if found.count > 0 {
                 let service = found[0]
                 if discoveryType == ServiceSearchDiscoveryType.CLOUD {
-                    println("search -> onServiceLost CLOUD \(service.uri)")
                     self.resolvedServices.removeObject(service.uri)
                     self.removeObject(&self.servicesCache, object: service)
                     dispatch_async(dispatch_get_main_queue()) { [unowned self]  () -> Void in
@@ -309,7 +301,6 @@ internal class ServiceSearchProviderBase: NSObject, ServiceSearchProvider {
                 } else {
                     service.getDeviceInfo(5, completionHandler: { (deviceInfo, error) -> Void in
                         if error != nil || deviceInfo == nil {
-                            println("search -> onServiceLost LAN \(service.uri)")
                             dispatch_async(self.accessQueue) { [unowned self] in
                                 self.resolvedServices.removeObject(service.uri)
                                 self.removeObject(&self.servicesCache, object: service)

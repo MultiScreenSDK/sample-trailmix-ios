@@ -95,7 +95,7 @@ When a TV application connects to this channel, the onReady method/notification 
 **Params**:
 
 - attributes `[String:String]?` - Any attributes you want to associate with the client (ie. ["name":"FooBar"] )
-- completionHandler `(client?:error:) -> Void` - The callback handler
+- completionHandler `(client:error:) -> Void` - The callback handler
 	- client `ChannelClient` The client that is connecting which is yourself
 	- error `NSError?` - An error info if connect fails 
 
@@ -250,7 +250,7 @@ Called when the host app is ready to send or receive messages
 
 <a name="ChannelDelegate#onDisconnect"></a>
 
-##ChannelDelegate.onDisconnect(client?:error:)
+##ChannelDelegate.onDisconnect(client:error:)
 Called when the Channel is disconnected
 
 **Params**:

@@ -15,6 +15,7 @@
 		B255684A1A006DB000C2566E /* ChannelTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25568491A006DB000C2566E /* ChannelTransport.swift */; };
 		B255684C1A0071E600C2566E /* WebSocketTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B255684B1A0071E600C2566E /* WebSocketTransport.swift */; };
 		B255684E1A01C29500C2566E /* RPCMessaje.swift in Sources */ = {isa = PBXBuildFile; fileRef = B255684D1A01C29500C2566E /* RPCMessaje.swift */; };
+		B25FF74A1BA25C12008A4DF5 /* SSLSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25FF7491BA25C12008A4DF5 /* SSLSecurity.swift */; };
 		B289699419CB6FF700D73F97 /* MSF.h in Headers */ = {isa = PBXBuildFile; fileRef = B289699319CB6FF700D73F97 /* MSF.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B28969B419CB704200D73F97 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28969A719CB704200D73F97 /* Application.swift */; };
 		B28969B619CB704200D73F97 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28969A919CB704200D73F97 /* Channel.swift */; };
@@ -27,6 +28,16 @@
 		B2A343311A44DDCB00824251 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A343301A44DDCB00824251 /* WebSocket.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B245C39A1BAB852D00ABFF80 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B289698519CB6FF700D73F97 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B289698D19CB6FF700D73F97;
+			remoteInfo = MSF;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		B206D46919F5B5ED00CCD1A4 /* ChannelAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelAPITests.swift; sourceTree = "<group>"; };
 		B22CE3AB1A7C774800AEE802 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncUdpSocket.h; path = ../../../deps/CocoaAsyncSocket/GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
@@ -37,6 +48,7 @@
 		B25568491A006DB000C2566E /* ChannelTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelTransport.swift; sourceTree = "<group>"; };
 		B255684B1A0071E600C2566E /* WebSocketTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocketTransport.swift; path = ../../common/WebSocketTransport.swift; sourceTree = SOURCE_ROOT; };
 		B255684D1A01C29500C2566E /* RPCMessaje.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCMessaje.swift; sourceTree = "<group>"; };
+		B25FF7491BA25C12008A4DF5 /* SSLSecurity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SSLSecurity.swift; path = ../../../deps/starscream/SSLSecurity.swift; sourceTree = "<group>"; };
 		B289698E19CB6FF700D73F97 /* MSF.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MSF.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B289699219CB6FF700D73F97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B289699319CB6FF700D73F97 /* MSF.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSF.h; sourceTree = "<group>"; };
@@ -161,6 +173,7 @@
 				B22CE3AB1A7C774800AEE802 /* GCDAsyncUdpSocket.h */,
 				B22CE3AC1A7C774800AEE802 /* GCDAsyncUdpSocket.m */,
 				B2A343301A44DDCB00824251 /* WebSocket.swift */,
+				B25FF7491BA25C12008A4DF5 /* SSLSecurity.swift */,
 			);
 			name = deps;
 			sourceTree = "<group>";
@@ -209,6 +222,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B245C39B1BAB852D00ABFF80 /* PBXTargetDependency */,
 			);
 			name = MSFTests;
 			productName = MSFTests;
@@ -221,11 +235,14 @@
 		B289698519CB6FF700D73F97 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = Samsung;
 				TargetAttributes = {
 					B289698D19CB6FF700D73F97 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = E473V4LVN7;
 					};
 					B289699819CB6FF700D73F97 = {
 						CreatedOnToolsVersion = 6.0;
@@ -278,6 +295,7 @@
 				B28969B619CB704200D73F97 /* Channel.swift in Sources */,
 				B255684A1A006DB000C2566E /* ChannelTransport.swift in Sources */,
 				B28969BB19CB704200D73F97 /* Message.swift in Sources */,
+				B25FF74A1BA25C12008A4DF5 /* SSLSecurity.swift in Sources */,
 				B255684C1A0071E600C2566E /* WebSocketTransport.swift in Sources */,
 				B2509CDF1A786C4700862072 /* MSFDiscoveryProvider.swift in Sources */,
 				B28969BD19CB704200D73F97 /* Service.swift in Sources */,
@@ -299,6 +317,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B245C39B1BAB852D00ABFF80 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B289698D19CB6FF700D73F97 /* MSF */;
+			targetProxy = B245C39A1BAB852D00ABFF80 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B22569921A1411980075482D /* Coverage */ = {
@@ -351,6 +377,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -361,7 +389,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.samsung.sta.multiscreen.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Coverage;
@@ -379,6 +409,7 @@
 				);
 				INFOPLIST_FILE = MSFTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.samsung.sta.multiscreen.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Coverage;
@@ -404,6 +435,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -472,6 +504,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -480,7 +514,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.samsung.sta.multiscreen.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -489,6 +525,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -497,7 +535,9 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.samsung.sta.multiscreen.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -515,6 +555,7 @@
 				);
 				INFOPLIST_FILE = MSFTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.samsung.sta.multiscreen.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -528,6 +569,7 @@
 				);
 				INFOPLIST_FILE = MSFTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.samsung.sta.multiscreen.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
