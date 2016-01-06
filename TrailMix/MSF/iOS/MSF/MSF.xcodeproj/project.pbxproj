@@ -221,6 +221,8 @@
 		B289698519CB6FF700D73F97 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = Samsung;
 				TargetAttributes = {

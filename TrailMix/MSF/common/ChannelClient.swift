@@ -25,7 +25,7 @@ THE SOFTWARE.
 import Foundation
 
 ///  A client currently connected to the channel
-@objc public class ChannelClient: Printable, Equatable {
+public class ChannelClient: CustomStringConvertible, Equatable {
 
     var clientInfo: [String:AnyObject]
 
@@ -62,9 +62,9 @@ import Foundation
 
     ///  The initializer
     ///
-    ///  :param: clientInfo: A dictionary with the client information
+    ///  - parameter clientInfo:: A dictionary with the client information
     ///
-    ///  :returns: A ChannelClient instance
+    ///  - returns: A ChannelClient instance
     internal init (clientInfo: [String:AnyObject]) {
         self.clientInfo = clientInfo
     }

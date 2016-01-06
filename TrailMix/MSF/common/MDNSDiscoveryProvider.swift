@@ -42,7 +42,7 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
 
     required init(delegate: ServiceSearchProviderDelegate, id: String?) {
         super.init(delegate: delegate, id: id)
-        type = ServiceSearchDiscoveryType.LAN
+        type = ServiceSearchProviderType.MDNS
         serviceBrowser.delegate = self
     }
 
@@ -60,9 +60,10 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
 
         if id == nil {
             serviceBrowser.searchForServicesOfType(ServiceType, inDomain: ServiceDomain)
+            //serviceBrowser.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSRunLoopCommonModes)
         } else {
             var aNetService = NSNetService(domain: ServiceDomain, type: ServiceType, name: id!)
-            netServiceBrowser(serviceBrowser, didFindService: aNetService, moreComing: false)
+            netServiceBrowser(nil, didFindService: aNetService, moreComing: false)
         }
 
     }
@@ -103,12 +104,12 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
         }
     }
 
-    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser, didNotSearch errorDict: [NSObject : AnyObject]) {
+    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser!, didNotSearch errorDict: [NSObject : AnyObject]!) {
         serviceBrowser.stop()
         netServiceBrowserDidStopSearch(aNetServiceBrowser)
     }
 
-    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser, didFindService aNetService: NSNetService, moreComing: Bool) {
+    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser!, didFindService aNetService: NSNetService!, moreComing: Bool) {
         if let found = find(netServices, aNetService) {
             println("ignoring \(netServices[found].name)")
         } else {
@@ -116,14 +117,14 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
             aNetService.scheduleInRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
             aNetService.resolveWithTimeout(NSTimeInterval(2))
             netServices.append(aNetService)
-        }        
+        }
     }
 
-    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser, didRemoveService aNetService: NSNetService, moreComing: Bool) {
+    func netServiceBrowser(aNetServiceBrowser: NSNetServiceBrowser!, didRemoveService aNetService: NSNetService!, moreComing: Bool) {
         aNetService.stop()
         aNetService.delegate = nil
         removeService(aNetService)
-        delegate?.onServiceLost(aNetService.name, discoveryType: self.type)
+        delegate?.onServiceLost(aNetService.name, provider: self)
     }
 
     // MARK: - NSNetServiceDelegate  -
@@ -140,15 +141,33 @@ class MDNSDiscoveryProvider: ServiceSearchProviderBase, NSNetServiceBrowserDeleg
         }
     }
 
-    func netServiceDidResolveAddress(aNetService: NSNetService) {
+    func netServiceDidResolveAddress(aNetService: NSNetService!) {
         //The text record have the API root URI so the implementer can contruct the REST endpoint for App management
         if aNetService.addresses!.count > 0 {
             let txtRecord : NSDictionary = NSNetService.dictionaryFromTXTRecordData(aNetService.TXTRecordData()) as NSDictionary
-            if let endpointData = txtRecord["se"] as? NSData {
-                let endpoint: String = NSString(bytes: endpointData.bytes, length: endpointData.length, encoding: NSUTF8StringEncoding) as! String
-                let uuidData = txtRecord["id"] as! NSData
-                let uuid: String = NSString(bytes: uuidData.bytes, length: uuidData.length, encoding: NSUTF8StringEncoding) as! String
-                delegate!.onServiceFound(uuid, serviceURI: endpoint, discoveryType: ServiceSearchDiscoveryType.LAN)
+            var info: [String:String] = [:]
+
+            let data = aNetService.addresses![0] as NSData
+            var sockaddrPtr : UnsafeMutablePointer<sockaddr_in> = UnsafeMutablePointer<sockaddr_in>.alloc(sizeof(sockaddr_in))
+            data.getBytes(sockaddrPtr, length: sizeof(sockaddr_in))
+            var sockaddr : sockaddr_in = sockaddrPtr.memory
+            let address = String.fromCString(inet_ntoa(sockaddr.sin_addr))
+            info["ip"] = address
+
+            let filteredKeys = txtRecord.allKeys.filter {($0 as String == "id" || $0 as String == "se" || $0 as String == "ve" || $0 as String == "fn" || $0 as String == "md");}
+            if filteredKeys.count >= 5 {
+                for key in txtRecord.allKeys {
+                    let data : NSData = txtRecord[key as NSString] as NSData
+                    let val: String = NSString(bytes: data.bytes, length: data.length, encoding: NSUTF8StringEncoding) as String
+                    info[key as String] = val
+                }
+                let service = Service(txtRecordDictionary: info)
+                service.getDeviceInfo(2) { [unowned self] (deviceInfo, error) -> Void in
+                    if self.delegate != nil && (error == nil && deviceInfo != nil) {
+                        self.delegate!.onServiceFound(service, provider: self)
+                    }
+                }
+
             }
         }
         //release resources

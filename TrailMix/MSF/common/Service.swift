@@ -30,43 +30,44 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 ///  A Service instance represents the multiscreen service root on the remote device
 ///  Use the class to control top level services of the device
 ///
-@objc public class Service : Printable, Equatable {
-
-    private var discoveryRecord: [String:AnyObject]
+public class Service : CustomStringConvertible, Equatable {
 
     internal var transportType: ChannelTransportType
 
+    internal var requireRechabilty = false
+
+    internal var usePublicURI = false
+
     internal var providers = NSMutableSet()
 
-    public var discoveryType = ServiceSearchDiscoveryType.LAN
+    private var discoveryRecord: [String:String]
 
     /// The id of the service
     public var id: String {
-        return discoveryRecord["id"] as! String
+        return discoveryRecord["id"]!
     }
 
     /// The uri of the service (http://<ip>:<port>/api/v2/)
     public var uri: String {
-        return discoveryRecord["uri"] as! String
+        if usePublicURI && discoveryRecord["pse"] != nil && discoveryRecord["pse"]! != "undefined" {
+            return discoveryRecord["pse"]!
+        }
+        return discoveryRecord["se"]!
     }
 
     /// The name of the service (Living Room TV)
     public var name: String {
-        if let nameTemp = discoveryRecord["name"] as? String {
-            return nameTemp
-        } else {
-            return "Multiscreen Device"
-        }
+        return discoveryRecord["fn"]!
     }
 
     /// The version of the service (x.x.x)
     public var version: String {
-        return discoveryRecord["version"] as! String
+        return discoveryRecord["ve"]!
     }
 
     /// The type of the service (Samsung SmartTV)
     public var type: String {
-        return (discoveryRecord["device"] as! [String:AnyObject])["type"] as! String
+        return discoveryRecord["md"]!
     }
 
     /// The service description
@@ -78,7 +79,7 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 
     /// Initializer
     ///
-    internal init(txtRecordDictionary: [String:AnyObject]) {
+    internal init(txtRecordDictionary: Dictionary<String,String>) {
         discoveryRecord = txtRecordDictionary
         //    device = nil
         transportType = ChannelTransportType.WebSocket
@@ -86,9 +87,9 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 
     ///  This asynchronously method retrieves a dictionary of additional information about the device the service is running on
     ///
-    ///  :param: timeout: timeout
+    ///  - parameter timeout:: timeout
     ///
-    ///  :param: completionHandler: A block to handle the response dictionary
+    ///  - parameter completionHandler:: A block to handle the response dictionary
     ///
     ///     - deviceInfo: The device info dictionary
     ///     - error: An error info if getDeviceInfo failed
@@ -98,8 +99,8 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
             if error != nil {
                 completionHandler(deviceInfo: nil, error: error)
             } else {
-                var err: NSError?
-                let jsonResult : [String:AnyObject]? = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as? [String:AnyObject]
+                let err: NSError?
+                let jsonResult : [String:AnyObject]? = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers) as? [String:AnyObject]
 
                 completionHandler(deviceInfo: jsonResult, error: err)
             }
@@ -109,38 +110,25 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 
     ///  Creates an application instance belonging to that service
     ///
-    ///  :param: id The id of the application
+    ///  - parameter id: The id of the application
     ///
     ///   - For an installed application this is the string id as provided by Samsung, If your TV app is still in development, you can use the folder name of your app as the id. Once the TV app has been released into Samsung Apps, you must use the supplied app id.`
     ///   - For a cloud application this is the application's URL
     ///
-    ///  :param: channelURI: The uri of the Channel ("com.samsung.multiscreen.helloworld")
+    ///  - parameter channelURI:: The uri of the Channel ("com.samsung.multiscreen.helloworld")
     ///
-    ///  :param: args: A dictionary of command line aruguments to be passed to the Host TV App
-    ///  :returns: An Application instance or nil if application id or channel id is empty
+    ///  - parameter args:: A dictionary of command line aruguments to be passed to the Host TV App
+    ///  - returns: An Application instance or nil if application id or channel id is empty
     public func createApplication(id: AnyObject, channelURI: String, args: [String:AnyObject]?) -> Application? {
-        if channelURI.isEmpty {
-            return nil;
-        }
-        switch id {
-        case let url as NSURL:
-            break
-        case let id as String:
-            if id.isEmpty {
-                return nil;
-            }
-        default:
-            return nil
-        }
-
-        return Application(appId: id, channelURI: channelURI, service: self, args: args)
+        let app = Application(appId: id, channelURI: channelURI, service: self, args: args)
+        return app
     }
 
     ///  Creates a channel instance belonging to that service ("mychannel")
     ///
-    ///  :param: ` The uri of the Channel ("com.samsung.multiscreen.helloworld")
+    ///  - parameter `: The uri of the Channel ("com.samsung.multiscreen.helloworld")
     ///
-    ///  :returns: A Channel instance
+    ///  - returns: A Channel instance
     public func createChannel(channelURI: String) -> Channel {
         return Channel(uri: channelURI , service: self)
     }
@@ -149,15 +137,15 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 
     ///  Creates a service search object
     ///
-    ///  :returns: An instance of ServiceSearch
+    ///  - returns: An instance of ServiceSearch
     public class func search() -> ServiceSearch {
         return ServiceSearch()
     }
 
     ///  This asynchronous method retrieves a service instance given a service URI
     ///
-    ///  :param: uri: The uri of the service
-    ///  :param: completionHandler: The completion handler with the service instance or an error
+    ///  - parameter uri:: The uri of the service
+    ///  - parameter completionHandler:: The completion handler with the service instance or an error
     ///
     ///   - service: The service instance
     ///   - timeout: The timeout for the request
@@ -168,12 +156,17 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
                 completionHandler(service: nil, error: error)
             } else {
                 var err: NSError?
-                if let jsonResult: [String:AnyObject] = JSON.parse(data: data!)  as? [String:AnyObject] {
-                    let service = Service(txtRecordDictionary: jsonResult)
-                    completionHandler(service: service, error: error)
-                } else {
-                    completionHandler(service: nil, error: error)
-                }
+                let jsonResult : NSDictionary = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
+                //let device = Device(info: jsonResult["device"] as Dictionary)
+                var txtRecordDictionary = [String:String]()
+                txtRecordDictionary["fn"] = jsonResult["name"] as? String
+                txtRecordDictionary["se"] = jsonResult["uri"] as? String
+                txtRecordDictionary["ve"] = jsonResult["version"] as? String
+                txtRecordDictionary["ip"] = jsonResult["device"]?["ip"] as? String
+                txtRecordDictionary["md"] = jsonResult["device"]?["model"] as? String
+                txtRecordDictionary["id"] = jsonResult["id"] as? String
+                let service = Service(txtRecordDictionary: txtRecordDictionary)
+                completionHandler(service: service, error: nil)
             }
         }
 
@@ -182,15 +175,15 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 
     ///  This asynchronous method retrieves a service instance given a service id
     ///
-    ///  :param: id: The id of the service
-    ///  :param: completionHandler: The completion handler with the service instance or an error
+    ///  - parameter id:: The id of the service
+    ///  - parameter completionHandler:: The completion handler with the service instance or an error
     ///
     ///   - service: The service instance
     ///   - error: An error info if getById fails
     public class func getById(id: String, completionHandler: (service: Service?, error: NSError? ) -> Void) {
         var findObserver: AnyObject?
         var stopObserver: AnyObject?
-        var search = ServiceSearch(id: id)
+        let search = ServiceSearch(id: id)
         stopObserver = search.on(MSDidStopSeach) { (notification) -> Void in
             search.off(findObserver!)
             search.off(stopObserver!)
@@ -210,5 +203,5 @@ public typealias GetServiceCompletionHandler = (service: Service?, error: NSErro
 }
 
 public func == (lhs: Service, rhs: Service) -> Bool {
-    return lhs.id == rhs.id && lhs.discoveryType == rhs.discoveryType
+    return lhs.id == rhs.id
 }

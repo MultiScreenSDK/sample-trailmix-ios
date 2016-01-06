@@ -34,7 +34,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     var queueMedias = NSMutableOrderedSet()
     
     /// Application url
-    var appURL: String =  "http://multiscreen.samsung.com/examples/trailmix/tv/index.html"
+    var appURL: String =  "http://dgpcnfdr6d6y5.cloudfront.net/examples/trailmix/tv/index.html"
+    
     /// Application Channel
     //var channelId: String = "com.samsung.multiscreen.photos"
     var channelId: String = "com.samsung.trailmix"
@@ -155,7 +156,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     }
     
     func removeObject<T: Equatable>(inout arr: Array<T>, object: T) -> T? {
-        if let found = find(arr, object) {
+        if let found = arr.indexOf(object) {
             return arr.removeAtIndex(found)
         }
         return nil
@@ -178,8 +179,8 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
    
     /// Connect to an Application
     ///
-    /// :param: selected service
-    /// :param: completionHandler The callback handler,  return true or false
+    /// - parameter selected: service
+    /// - parameter completionHandler: The callback handler,  return true or false
     func createApplication(service: Service, completionHandler: ((Bool!,error: NSError!) -> Void)!){
         app = service.createApplication(NSURL(string: appURL)!, channelURI: channelId, args: ["cmd line params": "cmd line values"])
         app.delegate = self
@@ -195,7 +196,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     /// Close the current connected application
     ///
-    /// :param: completionHandler The callback handler,  return true or false
+    /// - parameter completionHandler: The callback handler,  return true or false
     func closeApplication(completionHandler: ((Bool!) -> Void)!){
         app.disconnect(leaveHostRunning: true, completionHandler: { (channel, error) -> Void in
             if (error == nil){
@@ -217,7 +218,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     /// Send PlayPause event to the the connected Service
     ///
-    /// :param: true - play, false - pause
+    /// - parameter true: - play, false - pause
     func sendResumePause(play: Bool) {
         if isConnected {
             app.publish(event: play ? "resume":"pause", message: nil, target: MessageTarget.Broadcast.rawValue)
@@ -257,16 +258,16 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     ///  Called when a Channel Error is fired
     ///
-    ///  :param: error: The error
+    ///  - parameter error:: The error
     func onError(error: NSError) {
-        println(error.localizedDescription)
+        print(error.localizedDescription)
     }
     
     ///  Called when the Channel is connected
     ///
-    ///  :param: client: The Client that just connected to the Channel
+    ///  - parameter client:: The Client that just connected to the Channel
     ///
-    ///  :param: error: An error info if any
+    ///  - parameter error:: An error info if any
     func onConnect(client: ChannelClient?, error: NSError?) {
         if (error == nil) {
             stopSearching()
@@ -277,9 +278,9 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     
     ///  Called when the Channel is disconnected
     ///
-    ///  :param: client The Client that just disconnected from the Channel
+    ///  - parameter client: The Client that just disconnected from the Channel
     ///
-    ///  :param: error: An error info if any
+    ///  - parameter error:: An error info if any
     func onDisconnect(client: ChannelClient?, error: NSError?) {
         startSearching()
         idVideoPlayigInTV = nil
@@ -289,7 +290,7 @@ class MultiScreenManager: NSObject, ServiceSearchDelegate, ChannelDelegate {
     ///  ChannelDelegate
     ///  Called when the Channel receives a text message
     ///
-    ///  :param: message: Text message received
+    ///  - parameter message:: Text message received
     func onMessage(message: Message) {
         if message.event == "appState" {
             if let appStateDict = message.data as? [String:AnyObject] {

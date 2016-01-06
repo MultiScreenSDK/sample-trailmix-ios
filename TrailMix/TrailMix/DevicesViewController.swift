@@ -97,7 +97,7 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         /// Setting the custom cell view
         var cell: UITableViewCell
-        cell = tableView.dequeueReusableCellWithIdentifier(devicesFoundCellID, forIndexPath: indexPath) as! UITableViewCell
+        cell = tableView.dequeueReusableCellWithIdentifier(devicesFoundCellID, forIndexPath: indexPath) 
         
         
         // Set tableView separator style
@@ -207,7 +207,7 @@ class DevicesViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     /// UIGestureRecognizerDelegate used to disable the tap event if the tapped View is not the main View
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool{
-        if (touch.view.tag == 1){
+        if (touch.view!.tag == 1){
             return true
         }
         return false

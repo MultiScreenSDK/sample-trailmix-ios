@@ -8,13 +8,13 @@
       location = "group:common"
       name = "common">
       <FileRef
-         location = "group:MDNSDiscoveryProvider.swift">
-      </FileRef>
-      <FileRef
          location = "group:ChannelClient.swift">
       </FileRef>
       <FileRef
          location = "group:ChannelTransport.swift">
+      </FileRef>
+      <FileRef
+         location = "group:MDNSDiscoveryProvider.swift">
       </FileRef>
       <FileRef
          location = "group:RPCMessaje.swift">

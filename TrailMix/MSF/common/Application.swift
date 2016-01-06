@@ -61,17 +61,26 @@ import Foundation
 
     public private(set) var args: [String:AnyObject]? = nil
 
-    init(appId: AnyObject, channelURI: String, service: Service, args:[String:AnyObject]?) {
+    public init?(appId: AnyObject, channelURI: String, service: Service, args:[String:AnyObject]?) {
+        if channelURI.isEmpty {
+            super.init()
+            return nil;
+        }
         self.args = args
         switch appId {
         case let url as NSURL:
             id = url.absoluteString!
             type = .WebApplication
-        case let installedId as String:
-            id = installedId
+        case let id as String:
+            self.id = id
             type = .Application
+            if id.isEmpty {
+                super.init()
+                return nil;
+            }
         default:
-            break
+            super.init()
+            return nil
         }
         super.init(uri: channelURI, service: service)
         clientDisconnectObserver = on(ChannelEvent.ClientDisconnect.rawValue, performClosure: clientDisconnect)
@@ -99,13 +108,13 @@ import Foundation
             dispatch_async(dispatch_get_main_queue(), {
                 if error != nil {
                     if data != nil {
-                        let message = JSON.parse(data: data!) as! [String:AnyObject]
+                        let message = JSON.parse(data: data!) as [String:AnyObject]
                         completionHandler(info: message, error: error)
                     } else {
                         completionHandler(info: [:], error: error)
                     }
                 } else {
-                    let message = JSON.parse(data: data!) as! [String:AnyObject]
+                    let message = JSON.parse(data: data!) as [String:AnyObject]
                     completionHandler(info: message, error: nil)
                 }
             })
@@ -129,13 +138,11 @@ import Foundation
             params["args"] = args
         }
         let data = JSON.jsonDataForObject(params)
-        println(restEndpoint)
         Requester.doPost(restEndpoint, payload: data, headers: ["Content-Type":"application/json;charset=UTF-8"], timeout: 10, completionHandler: { (responseHeaders, data, error) -> Void in
             //TODO: override the error message with the one provided by the server if it was sent
             //            if data != nil {
             //                let message = JSON.parse(data: data!) as [String:AnyObject]
             //            }
-            println(error)
             completionHandler(success: error == nil, error: error)
         })
     }
